@@ -1,30 +1,24 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
-#include "ImpliedVolatilitySurface.h"
+#include "../ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
+#include <iostream>
+using namespace std;
 
 // Abstract class
 class Model
 {
 public:
 	Model(const double& init_value);
-
 	// Special members functions
-
 	// 1) default constructor
-
 	// 2) copy constructor
 	Model(const Model& model);
-
 	// 3) move constructor 
 	Model(Model&& model) noexcept;
-
 	// 4) copy assignment operator
 	Model& operator=(const Model& model);
-
 	// 5) move assignment operator
 	Model& operator=(Model&& model) noexcept;
-
 	// 6) destructor declared virtual
 	virtual ~Model() = default;
 
@@ -109,13 +103,3 @@ private:
 	double _epsilon_maturity; // dT
 	double _epsilon_strike;   // dK
 };
-
-
-
-
-
-
-
-
-#endif // !MODEL_H
-

@@ -2,7 +2,7 @@
 
 int main(){
     cout << "Test for Thomas solver" << endl;
-    cout << "----------------------" << endl;
+    cout << "----------------------" << endl << endl;
     Vector central_diagonal {1,1,1,1};
     Vector lower_diagonal {0,0,0,0};
     Vector upper_diagonal {0,0,0,0};

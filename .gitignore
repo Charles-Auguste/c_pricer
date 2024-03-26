@@ -1,3 +1,5 @@
 # Build folders
 **/build_/**
 **/_build/**
+.vscode/
+__pycache__

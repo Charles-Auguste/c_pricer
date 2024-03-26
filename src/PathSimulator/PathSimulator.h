@@ -37,6 +37,4 @@ public:
 	double next_step(size_t current_time_idx, double current_price) const override;
 };
 
-
-
 #endif
