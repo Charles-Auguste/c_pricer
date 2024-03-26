@@ -1,52 +1,103 @@
-#include "MDModel.h"
-#include "HestonModel.h"
-#include "EulerPathSimulator.h"
+#include "Pricer.h"
+#include "Calibration.h"
 #include <iostream>
+#include <vector>
 
-// method to create a time sequence
-std::vector<double> linspace(double start, double end, int num_points) {
-	std::vector<double> time;
-	double step = (end - start) / (num_points - 1);
 
-	for (int i = 0; i < num_points; ++i) {
-		time.push_back(start + i * step);
-	}
-
-	return time;
-}
 
 int main() {
 
-	// Test
 
-	// parameters : 
-	Vector initial_asset_vector{ 100, 0. };
-	double rho = -0.5;
-	double kappa = 0.2;
-	double sigma_vol = 0.01;
-	double theta = 0.2;
-	double interest_rate = 0.05;
-	Vector time_points(linspace(0., 1., 100));
-	int N = 100;
-	//std::vector<HestonModel> heston_vec(N);
+	// nappe de vol issue du drive
+	std::vector<std::vector<double>> IV_surface;
+	IV_surface = { { 0., 20., 40., 60., 80., 100., 120., 140., 160.,	180. },
+				{0.25,	0.39,	0.31,	0.24,	0.22,	0.16,	0.19,	0.23,	0.29,	0.38},
+				{0.5,	0.44,	0.36,	0.27,	0.21,	0.17,	0.21,	0.27,	0.35,	0.4},
+				{0.75,	0.45,	0.3,	0.25,	0.21,	0.18,	0.22,	0.29,	0.37,	0.45},
+				{1.,	0.48,	0.42,	0.34,	0.28,	0.2,	0.26,	0.31,	0.42,	0.5},
+				{2.,	0.52,	0.43,	0.34,	0.26,	0.21,	0.27,	0.38,	0.45,	0.55},
+				{3.,	0.54,	0.46,	0.34,	0.27,	0.23,	0.28,	0.36,	0.49,	0.58},
+				{4.,	0.57,	0.5,	0.46,	0.35,	0.25,	0.32,	0.45,	0.54,	0.6},
+				{5.,	0.6,	0.52,	0.41,	0.31,	0.26,	0.34,	0.4,	0.55,	0.62}
+	};
 
-	for (int k = 0; k < N; ++k) {
+	double S0 = 100; // Spot initial
+	double r = 0.05; // taux en convention continue
 
-		HestonModel model_test(initial_asset_vector, rho, kappa, sigma_vol, theta, interest_rate);
-		//std::cout << model_test.init_value()[1] << std::endl;
-		HestonModel* model_ptr(&model_test);
-		//Vector time_points{ 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0 };
-		EulerPathSimulator simu(model_ptr, time_points);
-		VectorVector path(simu.path());
-		std::cout << path[0].back() << std::endl;
-		//std::cout << "Asset price" << std::endl;
-		/*for (size_t idx = 0; idx < time_points.size() - 1; ++idx) {
-			std::cout << path[0][idx] << std::endl;
+
+
+	double kappa = 0.133229; // force de retour à la moyenne
+	double theta = 0.891253; //pow(IV_surface[IV_surface.size() - 1][5],2); // variance asymptotique
+	double sigma = 0.591923; // Vol de vol
+	double rho = -0.732991;  // Correlation spot_vol
+	double v0 = 0; // Variance initiale
+
+	// Création d'une instance HestonModel et BlackScholesModel
+	HestonModel model_test(kappa, theta, sigma, rho, v0, S0, r);
+	BlackScholesModel model_bs(S0, r, 0.5);
+
+	// Création d'une instance OptimisationImpliedVolatility
+	OptimisationImpliedVolatility optim(0.000001, model_test, model_bs);
+
+	
+	// test de l'optimisation
+
+	optim.calibration_bis(IV_surface);
+	std::cout << std::endl;
+
+	
+	// On sort la nappe de vol issue du modèle calibré
+
+	std::vector<std::vector<double>> IV_surface_model;
+	IV_surface_model = { { 0., 20., 40., 60., 80., 100., 120., 140., 160.,	180. },
+				{0.25,	0.39,	0.31,	0.24,	0.22,	0.16,	0.19,	0.23,	0.29,	0.38},
+				{0.5,	0.44,	0.36,	0.27,	0.21,	0.17,	0.21,	0.27,	0.35,	0.4},
+				{0.75,	0.45,	0.3,	0.25,	0.21,	0.18,	0.22,	0.29,	0.37,	0.45},
+				{1.,	0.48,	0.42,	0.34,	0.28,	0.2,	0.26,	0.31,	0.42,	0.5},
+				{2.,	0.52,	0.43,	0.34,	0.26,	0.21,	0.27,	0.38,	0.45,	0.55},
+				{3.,	0.54,	0.46,	0.34,	0.27,	0.23,	0.28,	0.36,	0.49,	0.58},
+				{4.,	0.57,	0.5,	0.46,	0.35,	0.25,	0.32,	0.45,	0.54,	0.6},
+				{5.,	0.6,	0.52,	0.41,	0.31,	0.26,	0.34,	0.4,	0.55,	0.62}
+	};
+
+
+	for (int i = 1; i<IV_surface_model.size(); i++) {
+
+		double T = IV_surface_model[i][0];
+
+		for (int j = 1; j<IV_surface_model[0].size();  j++) {
+
+			double K = IV_surface_model[0][j];
+			double call = optim.GetModelPtr()->CallPrice(K, T);
+			optim.implied_vol(T, K, call);
+			IV_surface_model[i][j] = optim.GetBSModelPtr()->GetSigma();
 		}
-		std::cout << "Volatility spot" << std::endl;
-		for (size_t idx = 0; idx < time_points.size() - 1; ++idx) {
-			std::cout << path[1][idx] << std::endl;
-		}*/
 
 	}
+
+	for (int i = 0; i<IV_surface_model.size(); i++) {
+
+		for (int j = 0; j<IV_surface_model[0].size(); j++) {
+
+			std::cout << IV_surface_model[i][j]<< " ";
+		}
+		std::cout<<std::endl;
+
+
+	}
+
+	std::cout << "Kappa " << optim.GetModelPtr()->GetKappa() << std::endl;
+	std::cout << "Theta " << optim.GetModelPtr()->GetTheta() << std::endl;
+	std::cout << "Sigma " << optim.GetModelPtr()->GetSigma() << std::endl;
+	std::cout << "Rho " << optim.GetModelPtr()->GetRho() << std::endl;
+	std::cout << "V0 " << optim.GetModelPtr()->GetV0() << std::endl;
+
+	double test = optim.GetModelPtr()->CallPrice(60., 0.25);
+	std::cout << test << std::endl;
+	optim.implied_vol(0.25, 60., test);
+	std::cout << optim.GetBSModelPtr()->GetSigma() << std::endl;
+
+
+	
+	return 0;
 }
