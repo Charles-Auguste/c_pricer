@@ -3,6 +3,10 @@
 #include <vector>
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
 
 class ImpliedVolatilitySurface
 {

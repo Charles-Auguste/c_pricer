@@ -1,8 +1,6 @@
 #include "ImpliedVolatilitySurface.h"
-#include "ThomasSolver.h"
-#include <iostream>
-#include <cmath>
-#include <algorithm>
+#include "../ThomasSolver/ThomasSolver.h"
+
 
 ImpliedVolatilitySurface::ImpliedVolatilitySurface(const Vector& maturities, const Vector& strikes, const Matrix& market_implied_volatilities, const double& risk_free_rate)
     : _maturities(maturities), _strikes(strikes), _market_implied_volatilities(market_implied_volatilities), _risk_free_rate(risk_free_rate)
