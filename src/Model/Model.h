@@ -1,29 +1,32 @@
 #pragma once
 
 #include "../ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
+#include <vector>
+using Vector = std::vector<double>;
+using Matrix = std::vector<Vector>;
 #include <iostream>
+#include <utility>
+#include <cmath>
 using namespace std;
 
+// 1D models
+// =========
 // Abstract class
 class Model
 {
 public:
+// 1) constructor
 	Model(const double& init_value);
-	// Special members functions
-	// 1) default constructor
-	// 2) copy constructor
 	Model(const Model& model);
-	// 3) move constructor 
 	Model(Model&& model) noexcept;
-	// 4) copy assignment operator
 	Model& operator=(const Model& model);
-	// 5) move assignment operator
 	Model& operator=(Model&& model) noexcept;
-	// 6) destructor declared virtual
+	// 2) destructor declared virtual
 	virtual ~Model() = default;
 
-	virtual double drift_term(const double& time, const double& asset_price) const = 0;
-	virtual double diffusion_term(const double& time, const double& asset_price) const = 0;
+	// 3) pure virtual functions
+	virtual double  drift_term(const double& time, const double& asset_price) const = 0;
+	virtual double  diffusion_term(const double& time, const double& asset_price) const = 0;
 	virtual Model* clone() const = 0;
 
 	inline double init_value() const
@@ -32,6 +35,7 @@ public:
 	}
 
 protected:
+	// 4) member variables
 	double _initial_value;
 };
 
@@ -39,50 +43,47 @@ protected:
 class BlackScholesModel : public Model
 {
 public:
+	// 1) constructor
 	BlackScholesModel(const double& init_value, const double& drift, const double& volatility);
-
-	// special member functions
-
-	// 1) Default constructor
-
-	// 2) Copy constructor
 	BlackScholesModel(const BlackScholesModel& model);
-
-	// 3) Move constructor
 	BlackScholesModel(BlackScholesModel&& model) noexcept;
-
-	// 4) Copy assignment operator
 	BlackScholesModel& operator=(const BlackScholesModel& model);
-
-	// 5) Move assignment operator
 	BlackScholesModel& operator=(BlackScholesModel&& model) noexcept;
 
-	// 6) destructor : no need to declare anything
-
+	// 2) public member functions
 	double drift_term(const double& time, const double& asset_price) const override;
 	double diffusion_term(const double& time, const double& asset_price) const override;
 	BlackScholesModel* clone() const override;
 
 private:
+	// 3) member variables
 	double _drift;      // mu
 	double _volatility; // sigma
 };
 
+
 class BachelierModel : public Model
 {
 public:
-	// TO DO : spacial member functions
+	// 1) constructor
+	BachelierModel(const double& init_value, const double& drift, const double& volatility);
+	BachelierModel(const BachelierModel& model);
+	BachelierModel(BachelierModel&& model) noexcept;
+	BachelierModel& operator=(const BachelierModel& model);
+	BachelierModel& operator=(BachelierModel&& model) noexcept;
 
+	// 2) public member functions
 	double drift_term(const double& time, const double& asset_price) const override;
 	double diffusion_term(const double& time, const double& asset_price) const override;
 	BachelierModel* clone() const override;
 
 private:
+	// 3) member variables
 	double _drift;      // mu
 	double _volatility; // sigma
 };
 
-// Dupire Local Volatility Model
+
 class DupireLocalVolatilityModel : public Model
 {
 public:
@@ -98,8 +99,81 @@ private:
 	double first_order_derivative_impliedvol_maturity(const double& time, const double& strike) const;
 	double first_order_derivative_impliedvol_strike(const double& time, const double& strike) const;
 	double second_order_derivative_impliedvol_strike(const double& time, const double& strike) const;
+	double d1(const double& time, const double& strike) const;
+	double d2(const double& time, const double& strike) const;
 
 	ImpliedVolatilitySurface _implied_volatility_surface;
 	double _epsilon_maturity; // dT
 	double _epsilon_strike;   // dK
+};
+
+
+// +1D models
+// =========
+// Abstract class
+class MdModel
+{
+public:
+	// Constructor with parameters
+	MdModel(const Vector& initial_asset_vector, const double& correlation_rate);
+	MdModel(const MdModel& model);
+	MdModel& operator=(const MdModel& model);
+
+	// Destructor declared virtual
+	virtual ~MdModel() = default;
+
+	// pure virtual methods so MdModel class is an abstract class
+	virtual Vector drift_vector_term(const double& time, const Vector& asset_vector) const = 0;
+	virtual Vector diffusion_vector_term(const double& time, const Vector& asset_vector) const = 0;
+	virtual MdModel* clone() const = 0;
+
+	inline Vector init_value() const
+	{
+		return _initial_asset_vector;
+	}
+
+	inline double correlation() const
+	{
+		return _correlation_rate;
+	}
+
+	virtual double sigma_vol() const = 0;
+	virtual double kappa() const = 0;
+	virtual double theta() const = 0;
+	virtual double interest_rate() const = 0;
+
+protected:
+	Vector _initial_asset_vector; // (S_0, V_0)
+	double _correlation_rate; // Correlation rate rho
+};
+
+class HestonModel : public MdModel
+{
+	using Vector = std::vector<double>;
+
+public:
+	HestonModel(const Vector& initial_asset_vector, const double& correlation_rate,
+		const double& kappa, const double& sigma_vol, const double& theta, 
+		const double& interest_rate); // parameters constructor
+	HestonModel(const HestonModel& model); // copy constructor
+	HestonModel& operator=(const HestonModel& model);
+	virtual ~HestonModel() = default;
+
+	Vector drift_vector_term(const double& time, const Vector& asset_vector) const override;
+	Vector diffusion_vector_term(const double& time, const Vector& asset_vector) const override;
+
+	HestonModel* clone() const override;
+
+	virtual double sigma_vol() const override;
+	virtual double kappa() const override;
+	virtual double theta() const override;
+	virtual double interest_rate() const override;
+
+
+private:
+	//double _corr_rate;
+	double _kappa;
+	double _sigma_vol;
+	double _theta;
+	double _interest_rate;
 };
