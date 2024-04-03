@@ -53,7 +53,7 @@ latex_elements = {
   'tableofcontents': '',           # To remove the TOC
   }
 latex_theme = 'howto'  # two values: 'manual' to make a book, 'howto' to have an article
-latex_engine = 'xelatex'
+#latex_engine = 'lualatex'
 
 
 #latex_logo = '_static/images/enpc.eps'

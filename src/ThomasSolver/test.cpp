@@ -11,7 +11,7 @@ int main(){
     ThomasSolver solver_instance = ThomasSolver(lower_diagonal, central_diagonal, upper_diagonal, right_side);
     Vector result = solver_instance.solve();
     for (size_t k=0; k < result.size(); k++){
-        cout << result[k] << endl;
+        cout <<"Result index "<< k << ": \t" <<result[k] << endl;
     };
     return 0;
 };

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.22)
+set(CMAKE_CXX_STANDARD 20)
+
+# Test executable
+add_executable(run test.cpp PathSimulator.cpp ../Model/Model.cpp ../ImpliedVolatilitySurface/ImpliedVolatilitySurface.cpp ../ThomasSolver/ThomasSolver.cpp)
+

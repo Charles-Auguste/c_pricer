@@ -20,21 +20,21 @@ int main(){
 
     double strike1 = 90;
     double maturity1 = 1.5;
-    cout << "Inputs 1:" << endl << "Strike =" << strike1 << endl << "Maturity =" << maturity1 << endl;
+    cout << "Inputs 1:" << endl << "\tStrike =" << strike1 << endl << "\tMaturity =" << maturity1 << endl;
     double result1 = surface_instance.implied_volatility(maturity1, strike1);
-    cout << "RESULT ="<< result1 <<endl << endl;
+    cout << "\tRESULT ="<< result1 <<endl << endl;
 
     double strike2 = 95;
     double maturity2 = 1.25;
-    cout << "Inputs 2:" << endl << "Strike =" << strike2 << endl << "Maturity =" << maturity2 << endl;
+    cout << "Inputs 2:" << endl << "\tStrike =" << strike2 << endl << "\tMaturity =" << maturity2 << endl;
     double result2 = surface_instance.implied_volatility(maturity2, strike2);
-    cout << "RESULT ="<< result2 <<endl << endl;
+    cout << "\t\tRESULT ="<< result2 <<endl << endl;
 
     double strike3 = 200;
     double maturity3 = 3;
-    cout << "Inputs 3:" << endl << "Strike =" << strike3 << endl << "Maturity =" << maturity3 << endl;
+    cout << "Inputs 3:" << endl << "\tStrike =" << strike3 << endl << "\tMaturity =" << maturity3 << endl;
     double result3 = surface_instance.implied_volatility(maturity3, strike3);
-    cout << "RESULT ="<< result3 <<endl;
+    cout << "\tRESULT ="<< result3 <<endl;
 
     return 0;
 };

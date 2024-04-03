@@ -220,13 +220,13 @@ double DupireLocalVolatilityModel::dupire_local_volatility(const double& time, c
 
 
 // MdModel class
-MdModel::MdModel(const Vector& initial_asset_vector, const double& correlation_rate):
-	_initial_asset_vector(initial_asset_vector), _correlation_rate(correlation_rate)
+MdModel::MdModel(const Vector& initial_asset_vector):
+	_initial_asset_vector(initial_asset_vector)
 {
 }
 
 MdModel::MdModel(const MdModel& model):
-	_initial_asset_vector(model._initial_asset_vector), _correlation_rate(model._correlation_rate)
+	_initial_asset_vector(model._initial_asset_vector)
 {
 }
 
@@ -234,14 +234,13 @@ MdModel& MdModel::operator=(const MdModel& model)
 {
 	if (this != &model) {
 		_initial_asset_vector = model._initial_asset_vector;
-		_correlation_rate = model._correlation_rate;
 	}
 	return *this;
 }
 
-// Heston Model
-HestonModel::HestonModel(const Vector& initial_asset_vector, const double& correlation_rate, const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate):
-	MdModel(initial_asset_vector, correlation_rate), _kappa(kappa), _sigma_vol(sigma_vol), _theta(theta), _interest_rate(interest_rate)
+// Heston
+HestonModel::HestonModel(const Vector& initial_asset_vector, const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate):
+	MdModel(initial_asset_vector), _kappa(kappa), _sigma_vol(sigma_vol), _theta(theta), _interest_rate(interest_rate)
 {
 }
 
@@ -265,16 +264,16 @@ HestonModel& HestonModel::operator=(const HestonModel& model)
 Vector HestonModel::drift_vector_term(const double& time, const Vector& asset_vector) const
 {
 	Vector drift_vector_term(2, 0.0);
-	drift_vector_term[0] = _interest_rate - std::max(asset_vector[1], 0.0)*0.5;
-	drift_vector_term[1] = _kappa * (_theta - std::max(asset_vector[1], 0.0));
+	drift_vector_term[0] = _interest_rate - max(asset_vector[1], 0.0)*0.5;
+	drift_vector_term[1] = _kappa * (_theta - max(asset_vector[1], 0.0));
 	return drift_vector_term;
 }
 
 Vector HestonModel::diffusion_vector_term(const double& time, const Vector& asset_vector) const
 {
 	Vector diffusion_term_vector(2, 0.0);
-	diffusion_term_vector[0] = std::sqrt(std::max(asset_vector[1],0.0));
-	diffusion_term_vector[1] = _sigma_vol * std::sqrt(std::max(asset_vector[1], 0.0));
+	diffusion_term_vector[0] = sqrt(max(asset_vector[1],0.0));
+	diffusion_term_vector[1] = _sigma_vol * sqrt(std::max(asset_vector[1], 0.0));
 	return diffusion_term_vector;
 }
 

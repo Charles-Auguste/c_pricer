@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
+
 #include <vector>
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
@@ -9,8 +10,7 @@ using Matrix = std::vector<Vector>;
 #include <cmath>
 using namespace std;
 
-// 1D models
-// =========
+
 // Abstract class
 class Model
 {
@@ -107,7 +107,6 @@ private:
 	double _epsilon_strike;   // dK
 };
 
-
 // +1D models
 // =========
 // Abstract class
@@ -115,12 +114,9 @@ class MdModel
 {
 public:
 	// Constructor with parameters
-	MdModel(const Vector& initial_asset_vector, const double& correlation_rate);
+	MdModel(const Vector& initial_asset_vector);
 	MdModel(const MdModel& model);
 	MdModel& operator=(const MdModel& model);
-
-	// Destructor declared virtual
-	virtual ~MdModel() = default;
 
 	// pure virtual methods so MdModel class is an abstract class
 	virtual Vector drift_vector_term(const double& time, const Vector& asset_vector) const = 0;
@@ -132,11 +128,6 @@ public:
 		return _initial_asset_vector;
 	}
 
-	inline double correlation() const
-	{
-		return _correlation_rate;
-	}
-
 	virtual double sigma_vol() const = 0;
 	virtual double kappa() const = 0;
 	virtual double theta() const = 0;
@@ -144,17 +135,13 @@ public:
 
 protected:
 	Vector _initial_asset_vector; // (S_0, V_0)
-	double _correlation_rate; // Correlation rate rho
 };
+
 
 class HestonModel : public MdModel
 {
-	using Vector = std::vector<double>;
-
 public:
-	HestonModel(const Vector& initial_asset_vector, const double& correlation_rate,
-		const double& kappa, const double& sigma_vol, const double& theta, 
-		const double& interest_rate); // parameters constructor
+	HestonModel(const Vector& initial_asset_vector,const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate); // parameters constructor
 	HestonModel(const HestonModel& model); // copy constructor
 	HestonModel& operator=(const HestonModel& model);
 	virtual ~HestonModel() = default;

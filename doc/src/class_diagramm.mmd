@@ -1,0 +1,120 @@
+---
+title: Class diagram for the pricer
+---
+classDiagram
+
+    %% Classes
+    class ThomasSolver{
+      -Vector _lower_diagonal
+      -Vector _central_diagonal
+      -Vector _upper_diagonal
+      -Vector _right_hand_side
+      + solve() Vector
+    }
+
+    class ImpliedVolatilitySurface{
+      -Vector _maturities
+      -Vector _strikes
+      -Matrix _market_implied_volatilities
+      -double _risk_free_rate
+      + implied_volatility() double
+      - evaluate_cubic_spline_coefficient() void
+      - smile_implied_volatility() double
+    }
+
+    class MdModel{
+      # Vector _initial_value
+      + drift_term() Vector
+      + diffusion_term() Vector
+    }
+
+    class Model{
+      # double _initial_value
+      + drift_term() double
+      + diffusion_term() double
+    }
+
+    class BlackScholesModel{
+      - double _drift
+      - double _volatility
+    }
+
+    class BachelierModel{
+      - double _drift
+      - double _volatility
+    }
+
+    class DupireLocalVolatilityModel{
+      - ImpliedVolatilitySurface _implied_volatility_surface
+      - double _epsilon_maturity
+      - double _epsilon_strike
+    }
+
+    class HestonModel{
+      - double _kappa
+	  - double _sigma_vol
+	  - double _theta
+	  - double _interest_rate
+    }
+
+    class PathSimulator{
+      # Vector _time_points
+      # Model _model
+      + next_step() double
+      + path() Vector
+    }
+
+    class EulerPathSimulator{
+    }
+
+    class Payoff{
+        + payoff() double
+    }
+
+    class MonteCarlo{
+        - int _nb_sim
+        - PathSimulator _path_simulator
+        - Payoff _payoff
+        + price() double
+    }
+
+    class EuropeanOptionPayoff{
+        - double _strike
+        - bool _is_call
+    }
+
+    %% Links and interactions
+    ThomasSolver -- ImpliedVolatilitySurface
+    ImpliedVolatilitySurface -- DupireLocalVolatilityModel
+    PathSimulator --o Model
+    PathSimulator --o MdModel
+    MonteCarlo --o PathSimulator
+    MonteCarlo --o Payoff
+    Model <|-- BlackScholesModel
+    Model <|-- DupireLocalVolatilityModel
+    Model <|-- BachelierModel
+    MdModel <|-- HestonModel
+    PathSimulator <|-- EulerPathSimulator
+    Payoff <|-- EuropeanOptionPayoff
+
+    %% Style
+    style Model fill:#f1948a,stroke:#333,stroke-width:2px
+    style MdModel fill:#f1948a,stroke:#333,stroke-width:2px
+    style BlackScholesModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
+    style BachelierModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
+    style DupireLocalVolatilityModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
+    style HestonModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
+     
+    style Payoff fill: #1abc9c ,stroke:#333,stroke-width:2px
+    style EuropeanOptionPayoff fill: #d1f2eb ,stroke:#333,stroke-width:1px
+
+    style PathSimulator fill: #f4d03f,stroke:#333,stroke-width:2px
+    style EulerPathSimulator fill: #fcf3cf ,stroke:#333,stroke-width:1px
+
+    style MonteCarlo fill: #85c1e9  ,stroke:#333,stroke-width:2px
+ 
+    style ImpliedVolatilitySurface fill:   #d5dbdb    ,stroke:#333,stroke-width:2px
+    style ThomasSolver fill: #e5e8e8  ,stroke:#333,stroke-width:1px
+ 
+
+    style Mineral fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5

@@ -32,7 +32,7 @@ In order to save an output file, the `write` method is called with a dataframe l
 
 **Class specification**
 
-.. literalinclude:: ../../OutputWriter/OutputWriter.h
+.. literalinclude:: ../../libs/IOlib/include/IOlib/io.h
 
 How to compile and test ?
 -------------------------
@@ -74,5 +74,4 @@ Like all the other functions and classes, a dedicated subfolder contains the cod
 A small example
 ---------------
 
-.. literalinclude:: ../../OutputWriter/main.cpp
-
+.. literalinclude:: ../../libs/IOlib/test/main.cpp
