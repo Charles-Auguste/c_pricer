@@ -10,10 +10,11 @@ double MonteCarlo::price() const
 	double price = 0.;
 
 	for (size_t sim_idx = 0; sim_idx < _number_simulations; ++sim_idx)
-		price += _payoff_ptr->payoff(_path_simulator_ptr->path());
-
+	{
+		double result = _payoff_ptr->payoff(_path_simulator_ptr->path());
+		price += result;
+		cout << "Simulation " << sim_idx << " : Price = " << result << " , Mean = " << price/(sim_idx + 1) << endl;
+	}
 	price /= _number_simulations;
 	return price;
-	
-
 }

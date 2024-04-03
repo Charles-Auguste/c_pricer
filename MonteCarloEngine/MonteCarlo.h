@@ -1,7 +1,10 @@
 #pragma once
 
-#include "PathSimulator.h"
-#include "Payoff.h"
+#include "../src/PathSimulator/PathSimulator.h"
+#include "../src/Payoff/Payoff.h"
+
+#include <algorithm>
+using namespace std;
 
 class MonteCarlo
 {

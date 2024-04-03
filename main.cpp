@@ -3,6 +3,14 @@
 #include "EulerPathSimulator.h"
 #include <iostream>
 
+
+// 
+
+// On a une matrice de vol (voir XML)
+
+
+
+
 // method to create a time sequence
 std::vector<double> linspace(double start, double end, int num_points) {
 	std::vector<double> time;

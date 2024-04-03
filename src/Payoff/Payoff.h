@@ -1,11 +1,13 @@
 #pragma once
 
+#include <random>
 #include <vector>
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <cassert>
 using namespace std;
 
 enum class CALL_PUT
@@ -33,11 +35,29 @@ public:
 private:
 	double _strike;
 	CALL_PUT _call_put;
-	double _discount_factor;
 };
 
-// Derived class of EuropeanOptionPayoff with Barriers
+class AmericanPayoff: public Payoff
+{
+public:
+	AmericanPayoff(double strike, CALL_PUT call_put);
+	double payoff(Vector asset_path) const override;
 
-// American payoffs
+	AmericanPayoff* clone() const override;
 
-// Asian payoffs
+private:
+	double _strike;
+	CALL_PUT _call_put;
+};
+
+class AsianPayoff: public Payoff
+{
+public:
+	AsianPayoff(double strike, CALL_PUT call_put);
+	double payoff(Vector asset_path) const override;
+
+	AsianPayoff* clone() const override;
+private:
+	double _strike;
+	CALL_PUT _call_put;
+};

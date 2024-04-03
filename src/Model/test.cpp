@@ -12,14 +12,14 @@ int main(){
     double volatility = 0.2;
     // For Dupire
     double epsilon_maturity = 0.0001;
-    double epsilon_strike = 100;
+    double epsilon_strike = 0.00001;
     Vector strikes {90, 100, 110, 120};
     Vector maturities {0.5, 1, 1.5, 2};
     Matrix market_volatilities;
     for (size_t k = 0; k < 4; k++){
         Vector volatilities;
         for (size_t l = 0; l < 4; l++){
-            volatilities.push_back(strikes[l]/100000 * maturities[k]);
+            volatilities.push_back(strikes[l]/1000 * maturities[k]);
         };
         market_volatilities.push_back(volatilities);
     };

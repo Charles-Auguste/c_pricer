@@ -80,8 +80,8 @@ BlackScholesModel* BlackScholesModel::clone() const
 	return new BlackScholesModel(*this);
 }
 
-// Bachelier class
 
+// Bachelier class
 BachelierModel::BachelierModel(const double& init_value, const double& drift, const double& volatility)
 	: Model(init_value), _drift(drift), _volatility(volatility)
 {}
@@ -130,6 +130,7 @@ BachelierModel* BachelierModel::clone() const
 {
 	return new BachelierModel(*this);
 }
+
 
 // Dupire Model
 DupireLocalVolatilityModel::DupireLocalVolatilityModel(double init_value, const ImpliedVolatilitySurface& implied_vol_surface, const double& eps_mat, const double& eps_strike)
@@ -238,6 +239,7 @@ MdModel& MdModel::operator=(const MdModel& model)
 	return *this;
 }
 
+
 // Heston
 HestonModel::HestonModel(const Vector& initial_asset_vector, const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate):
 	MdModel(initial_asset_vector), _kappa(kappa), _sigma_vol(sigma_vol), _theta(theta), _interest_rate(interest_rate)
@@ -272,8 +274,8 @@ Vector HestonModel::drift_vector_term(const double& time, const Vector& asset_ve
 Vector HestonModel::diffusion_vector_term(const double& time, const Vector& asset_vector) const
 {
 	Vector diffusion_term_vector(2, 0.0);
-	diffusion_term_vector[0] = sqrt(max(asset_vector[1],0.0));
-	diffusion_term_vector[1] = _sigma_vol * sqrt(std::max(asset_vector[1], 0.0));
+	diffusion_term_vector[0] = sqrt(max(asset_vector[1],0.0)) * asset_vector[0];
+	diffusion_term_vector[1] = _sigma_vol * sqrt(max(asset_vector[1], 0.0));
 	return diffusion_term_vector;
 }
 

@@ -257,7 +257,6 @@ Vector BroadieKayaPathSimulator::next_step(size_t current_time_idx, Vector curre
 	return next_asset_value;
 }
 
-
 double BroadieKayaPathSimulator::generate_chi_squared(int d) const
 {
 	std::random_device rd;
