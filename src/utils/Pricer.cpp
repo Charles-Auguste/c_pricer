@@ -15,7 +15,7 @@ double normalCDF(double x)
 }
 
 
-// Paramètres utiles pour Heston
+// Paramï¿½tres utiles pour Heston
 
 const std::complex<double> i(0, 1);
 const double pi = 2 * acos(0.0);
@@ -45,7 +45,7 @@ Model::Model(const Model& model):
 	_r(model._r)
 {}
 
-// Opérateur d'assignation
+// Opï¿½rateur d'assignation
 
 Model& Model::operator=(const Model& model) {
 
@@ -115,7 +115,7 @@ HestonModel& HestonModel::operator=(const HestonModel& model){
 	return *this;
 }
 
-// Méthode clone
+// Mï¿½thode clone
 
 HestonModel* HestonModel::clone() const {
 
@@ -185,7 +185,7 @@ void HestonModel::SetR(const double& r) {
 }
 
 
-// Méthodes servant au pricing close formula
+// Mï¿½thodes servant au pricing close formula
 
 
 std::complex<double> HestonModel::C1(const double& T, const double& omega) const{
@@ -341,7 +341,7 @@ BlackScholesModel::BlackScholesModel(const BlackScholesModel& model):
 	_sigma(model._sigma)
 {}
 
-// Opérateur d'assignation
+// Opï¿½rateur d'assignation
 
 BlackScholesModel& BlackScholesModel::operator=(const BlackScholesModel& model) {
 
@@ -355,7 +355,7 @@ BlackScholesModel& BlackScholesModel::operator=(const BlackScholesModel& model) 
 }
 
 
-// Méthode Clone
+// Mï¿½thode Clone
 
 BlackScholesModel* BlackScholesModel::clone() const {
 
@@ -396,7 +396,7 @@ void BlackScholesModel::SetSigma(const double& sigma) {
 	_sigma = sigma;
 }
 
-// Méthode de pricing
+// Mï¿½thode de pricing
 
 
 double BlackScholesModel::CallPrice(const double& K, const double& T) const {
