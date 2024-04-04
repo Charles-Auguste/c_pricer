@@ -1,4 +1,12 @@
 #pragma once
+# include <cfloat>
+# include <cmath>
+# include <cstdlib>
+# include <cstring>
+# include <ctime>
+# include <fstream>
+# include <iomanip>
+# include <iostream>
 #include <vector>
 using Vector = std::vector<double>;
 #include <complex>
@@ -18,9 +26,8 @@ public :
     ExplicitModel& operator=(const Model& model);
 
 protected:
-    double _S; // prix initial de l'actif
-    double _r; // taux court
-};
+    double _S; // Initial price
+    double _r; // risk free rate
 
 
 class ExplicitHestonModel : public ExplicitModel
@@ -101,7 +108,6 @@ private :
 };
 
 
-
 class OptimisationImpliedVolatility
 {
 public :
@@ -115,31 +121,26 @@ public :
 	ExplicitBlackScholesModel* GetBSModelPtr() const;
 	double GetEpsilon() const;
 
-	// Setteurs
-
 	void SetEpsilon(const double& epsilon);
+	// No assignment operator, we want the model pointer to be constant (but the model will change during calibration)
 
-
-	// Pas d'op�rateur d'assignation, on veut que le pointeur du mod�le soit constant (mais le mod�le 
-	// va �tre amener � changer au cours de la calibration)
-
-
-	// Calcul de la vol implicite (par dichotomie)
+	// Calculation of implicit volatility (by dichotomy)
 	void implied_vol(const double& T, const double& K, const double& C) const;
 
-
-
-	// Calcul de la loss function � partir d'une nappe de volatilit�
+	// Calculation of the loss function from a volatility surface
 	double loss_function(const std::vector<std::vector<double>>& IV_surface) const; //bas� sur erreur L2 des vols avec pond�ration en vega
 	double loss_function_bis(const std::vector<std::vector<double>>& IV_surface) const; //bas� sur erreur L2 des prix avec pond�ration en vega^2
 
-
-	// Optimisation de la loss function (avec Nelder Mead : algo du simplex)
+	// Optimization of the loss function (with Nelder Mead: simplex algorithm)
 	void calibration(const std::vector<std::vector<double>>& IV_surface) const;
 	void calibration_bis(const std::vector<std::vector<double>>& IV_surface) const;
 
 private :
-	double _epsilon_iv; // erreur tol�r�e pour le calcul de l'IV 
-	ExplicitHestonModel* const _model_ptr; // pointeur constant vers le mod�le dont on cherche � optimiser les param�tres
-	ExplicitBlackScholesModel* const _bs_model_ptr; // pointeur constant vers un mod�le BS : calcule de la vol impli
+	double _epsilon_iv; // error tolerated for calculating the IV
+	ExplicitHestonModel* const _model_ptr; // constant pointer to the model whose parameters we seek to optimize
+	ExplicitBlackScholesModel* const _bs_model_ptr; // constant pointer to a BS model: calculation of implied volatility
 };
+
+// Quadrature
+Vector gauss_hermite_points(const int& degree); // point vector
+Vector gauss_hermite_weights(const int& degree); //weight vector
