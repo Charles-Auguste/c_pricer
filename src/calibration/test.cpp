@@ -1,9 +1,9 @@
-#include "calibration.h"
+#include "Calibration.h"
 
 
 int main(){
-    cout << "Test utils" <<endl;
-    cout << "----------" <<endl << endl;
+    cout << "Test Calibration" <<endl;
+    cout << "----------------" <<endl << endl;
 
 	// test volatility surface
 	Matrix IV_surface;

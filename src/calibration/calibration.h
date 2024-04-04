@@ -81,8 +81,8 @@ private :
     Complex phi2(const double& T, const double& omega) const ;
     Vector P_1_2(const double& K, const double& T) const ;
 
-	Vector gauss_hermite_points(const int& degree) const; // point vector
-	Vector gauss_hermite_weights(const int& degree) const; //weight vector
+	Vector gauss_hermite_points() const; // point vector
+	Vector gauss_hermite_weights() const; //weight vector
 
     double _kappa;
     double _theta;
