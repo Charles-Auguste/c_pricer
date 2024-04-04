@@ -1,4 +1,8 @@
 #pragma once
+#include <iostream>
+#include <algorithm>
+#include <numeric>
+#include <numbers>
 # include <cfloat>
 # include <cmath>
 # include <cstdlib>
@@ -6,12 +10,16 @@
 # include <ctime>
 # include <fstream>
 # include <iomanip>
-# include <iostream>
 #include <vector>
 using Vector = std::vector<double>;
+using Matrix = std::vector<std::vector<double>>;
 #include <complex>
 using Complex = std::complex<double>;
 using namespace std;
+
+// Useful constant 
+const Complex i(0, 1);
+const double pi = 2 * acos(0.0);
 
 
 class ExplicitModel
@@ -23,11 +31,17 @@ public :
 
     virtual ~ExplicitModel()=default;
 
-    ExplicitModel& operator=(const Model& model);
+    ExplicitModel& operator=(const ExplicitModel& model);
+
+	double GetS() const ;
+    double GetR() const ;
+	void SetS(const double& S);
+    void SetR(const double& r);
 
 protected:
     double _S; // Initial price
     double _r; // risk free rate
+};
 
 
 class ExplicitHestonModel : public ExplicitModel
@@ -42,16 +56,12 @@ public :
     double GetSigma() const ;
     double GetRho() const ;
     double GetV0() const ;
-    double GetS() const ;
-    double GetR() const ;
 
     void SetKappa(const double& kappa);
     void SetTheta(const double& theta);
     void SetSigma(const double& sigma);
     void SetRho(const double& rho);
     void SetV0(const double& v0);
-    void SetS(const double& S);
-    void SetR(const double& r);
 
     ~ExplicitHestonModel() override = default;
 
@@ -69,7 +79,10 @@ private :
     Complex D2(const double& T, const double& omega) const ;
     Complex phi1(const double& T, const double& omega) const ;
     Complex phi2(const double& T, const double& omega) const ;
-    Complex P_1_2(const double& K, const double& T) const ;
+    Vector P_1_2(const double& K, const double& T) const ;
+
+	Vector gauss_hermite_points(const int& degree) const; // point vector
+	Vector gauss_hermite_weights(const int& degree) const; //weight vector
 
     double _kappa;
     double _theta;
@@ -79,7 +92,7 @@ private :
 };
 
 
-class ExplicitBlackScholesModel : public Model
+class ExplicitBlackScholesModel : public ExplicitModel
 {
 public :
     ExplicitBlackScholesModel();
@@ -92,19 +105,15 @@ public :
 
     ExplicitBlackScholesModel* clone() const;
 
-    double GetS() const;
-    double GetR() const;
     double GetSigma() const;
-
-    void SetS(const double& S);
-    void SetR(const double& r);
     void SetSigma(const double& sigma);
 
     double CallPrice(const double& K, const double& T) const;
     double Vega(const double&K, const double& T, const double& sigma_mkt) const;
 
 private : 
-   double _sigma;
+	double normalCDF(const double& x) const;
+	double _sigma;
 };
 
 
@@ -140,7 +149,3 @@ private :
 	ExplicitHestonModel* const _model_ptr; // constant pointer to the model whose parameters we seek to optimize
 	ExplicitBlackScholesModel* const _bs_model_ptr; // constant pointer to a BS model: calculation of implied volatility
 };
-
-// Quadrature
-Vector gauss_hermite_points(const int& degree); // point vector
-Vector gauss_hermite_weights(const int& degree); //weight vector
