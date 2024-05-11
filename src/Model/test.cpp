@@ -50,7 +50,7 @@ int main(){
 
     // 3) DupireLocalVolatilityModel
     cout << "DupireLocalVolatilityModel" << endl;
-    DupireLocalVolatilityModel du_model = DupireLocalVolatilityModel(init_value, surface_instance, epsilon_maturity, epsilon_strike);
+    DupireLocalVolatilityModel du_model = DupireLocalVolatilityModel(init_value, surface_instance, epsilon_maturity, epsilon_strike,risk_free_rate);
     cout << "\tInitial value: " << du_model.init_value() << endl;
     cout << "\tDrift term: " << du_model.drift_term(1, du_model.init_value()) << endl;
     cout << "\tDiffusion term: " << du_model.diffusion_term(1, du_model.init_value()) << endl;

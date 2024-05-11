@@ -55,7 +55,7 @@ public:
 	virtual ~MdPathSimulator();
 
 	virtual Vector next_step(size_t current_time_idx, Vector current_price) const =0;
-	Matrix path() const;
+	Vector path() const;
 
 	virtual MdPathSimulator* clone() const = 0;
 
@@ -91,10 +91,11 @@ public:
 class BroadieKayaPathSimulator: public MdPathSimulator
 {
 public:
-	BroadieKayaPathSimulator(const MdModel* model_ptr, const double& T, const size_t& nb_steps, const double& correlation); // copy constructor
+	BroadieKayaPathSimulator(const HestonModel* model_ptr, const double& T, const size_t& nb_steps, const double& correlation); // copy constructor
 	Vector next_step(size_t current_time_idx, Vector current_asset_value) const override;
 	BroadieKayaPathSimulator* clone() const override;
 private:
+	const HestonModel* _model_ptr;
 	double generate_chi_squared(int d) const;
 	double chi_prime(int d, double lambda) const ;
 

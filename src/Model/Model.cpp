@@ -31,16 +31,16 @@ Model& Model::operator=(Model&& model) noexcept
 
 
 // BlackScholesModel class
-BlackScholesModel::BlackScholesModel(const double& init_value, const double& drift, const double& volatility)
-	: Model(init_value), _drift(drift), _volatility(volatility)
+BlackScholesModel::BlackScholesModel(const double& init_value, const double& r, const double& volatility)
+	: Model(init_value), _r(r), _volatility(volatility)
 {}
 
 BlackScholesModel::BlackScholesModel(const BlackScholesModel& model)
-	: Model(model), _drift(model._drift), _volatility(model._volatility)
+	: Model(model), _r(model._r), _volatility(model._volatility)
 {}
 
 BlackScholesModel::BlackScholesModel(BlackScholesModel&& model) noexcept
-	: Model(std::move(model)), _drift(std::move(model._drift)), _volatility(std::move(model._volatility))
+	: Model(std::move(model)), _r(std::move(model._r)), _volatility(std::move(model._volatility))
 {}
 
 BlackScholesModel& BlackScholesModel::operator=(const BlackScholesModel& model)
@@ -48,7 +48,7 @@ BlackScholesModel& BlackScholesModel::operator=(const BlackScholesModel& model)
 	if (this != &model)
 	{
 		Model::operator=(model);
-		_drift = model._drift;
+		_r = model._r;
 		_volatility = model._volatility;
 	}
 	return *this;
@@ -59,7 +59,7 @@ BlackScholesModel& BlackScholesModel::operator=(BlackScholesModel&& model) noexc
 	if (this != &model)
 	{
 		Model::operator=(std::move(model));
-		_drift = std::move(model._drift);
+		_r = std::move(model._r);
 		_volatility = std::move(model._volatility);
 	}
 	return *this;
@@ -67,7 +67,7 @@ BlackScholesModel& BlackScholesModel::operator=(BlackScholesModel&& model) noexc
 
 double BlackScholesModel::drift_term(const double& time, const double& asset_price) const
 {
-	return _drift * asset_price;
+	return _r * asset_price;
 }
 
 double BlackScholesModel::diffusion_term(const double& time, const double& asset_price) const
@@ -82,16 +82,16 @@ BlackScholesModel* BlackScholesModel::clone() const
 
 
 // Bachelier class
-BachelierModel::BachelierModel(const double& init_value, const double& drift, const double& volatility)
-	: Model(init_value), _drift(drift), _volatility(volatility)
+BachelierModel::BachelierModel(const double& init_value, const double& r, const double& volatility)
+	: Model(init_value), _r(r), _volatility(volatility)
 {}
 
 BachelierModel::BachelierModel(const BachelierModel& model)
-	: Model(model), _drift(model._drift), _volatility(model._volatility)
+	: Model(model), _r(model._r), _volatility(model._volatility)
 {}
 
 BachelierModel::BachelierModel(BachelierModel&& model) noexcept
-	: Model(std::move(model)), _drift(std::move(model._drift)), _volatility(std::move(model._volatility))
+	: Model(std::move(model)), _r(std::move(model._r)), _volatility(std::move(model._volatility))
 {}
 
 BachelierModel& BachelierModel::operator=(const BachelierModel& model)
@@ -99,7 +99,7 @@ BachelierModel& BachelierModel::operator=(const BachelierModel& model)
 	if (this != &model)
 	{
 		Model::operator=(model);
-		_drift = model._drift;
+		_r = model._r;
 		_volatility = model._volatility;
 	}
 	return *this;
@@ -110,7 +110,7 @@ BachelierModel& BachelierModel::operator=(BachelierModel&& model) noexcept
 	if (this != &model)
 	{
 		Model::operator=(std::move(model));
-		_drift = std::move(model._drift);
+		_r = std::move(model._r);
 		_volatility = std::move(model._volatility);
 	}
 	return *this;
@@ -118,7 +118,7 @@ BachelierModel& BachelierModel::operator=(BachelierModel&& model) noexcept
 
 double BachelierModel::drift_term(const double& time, const double& asset_price) const
 {
-	return _drift;
+	return _r;
 }
 
 double BachelierModel::diffusion_term(const double& time, const double& asset_price) const
@@ -133,14 +133,14 @@ BachelierModel* BachelierModel::clone() const
 
 
 // Dupire Model
-DupireLocalVolatilityModel::DupireLocalVolatilityModel(double init_value, const ImpliedVolatilitySurface& implied_vol_surface, const double& eps_mat, const double& eps_strike)
-	: Model(init_value), _implied_volatility_surface(implied_vol_surface), _epsilon_maturity(eps_mat), _epsilon_strike(eps_strike)
+DupireLocalVolatilityModel::DupireLocalVolatilityModel(double init_value, const ImpliedVolatilitySurface& implied_vol_surface, const double& eps_mat, const double& eps_strike, const double& r)
+	: Model(init_value), _implied_volatility_surface(implied_vol_surface), _epsilon_maturity(eps_mat), _epsilon_strike(eps_strike), _r(r)
 {
 }
 
 double DupireLocalVolatilityModel::drift_term(const double& time, const double& asset_price) const
 {
-	return _implied_volatility_surface.risk_free_rate() * asset_price;
+	return _r * asset_price;
 }
 
 double DupireLocalVolatilityModel::diffusion_term(const double& time, const double& asset_price) const
@@ -189,9 +189,8 @@ double DupireLocalVolatilityModel::second_order_derivative_impliedvol_strike(con
 }
 
 double DupireLocalVolatilityModel::d1(const double& time, const double& strike) const{
-	double r = _implied_volatility_surface.risk_free_rate();
 	double sigma = _implied_volatility_surface.implied_volatility(time, strike);
-	double numerator = log(_initial_value/strike) +time * (r + pow(sigma, 2.)/2);
+	double numerator = log(_initial_value/strike) +time * (_r + pow(sigma, 2.)/2);
 	double denominator = sigma * sqrt(time);
 	return numerator/denominator;
 };
@@ -204,7 +203,7 @@ double DupireLocalVolatilityModel::d2(const double& time, const double& strike) 
 
 double DupireLocalVolatilityModel::dupire_local_volatility(const double& time, const double& strike) const
 {
-	double r = _implied_volatility_surface.risk_free_rate();
+	double r = _r;
 	double sigma = _implied_volatility_surface.implied_volatility(time, strike);
 	double d_sigma_k = first_order_derivative_impliedvol_strike(time, strike);
 	double d_sigma_T = first_order_derivative_impliedvol_maturity(time, strike);
@@ -241,13 +240,13 @@ MdModel& MdModel::operator=(const MdModel& model)
 
 
 // Heston
-HestonModel::HestonModel(const Vector& initial_asset_vector, const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate):
-	MdModel(initial_asset_vector), _kappa(kappa), _sigma_vol(sigma_vol), _theta(theta), _interest_rate(interest_rate)
+HestonModel::HestonModel(const Vector& initial_asset_vector, const double& kappa, const double& sigma_vol, const double& theta, const double& r):
+	MdModel(initial_asset_vector), _kappa(kappa), _sigma_vol(sigma_vol), _theta(theta), _r(r)
 {
 }
 
 HestonModel::HestonModel(const HestonModel& model):
-	MdModel(model), _kappa(model._kappa), _sigma_vol(model._sigma_vol), _theta(model._theta), _interest_rate(model._interest_rate)
+	MdModel(model), _kappa(model._kappa), _sigma_vol(model._sigma_vol), _theta(model._theta), _r(model._r)
 {
 }
 
@@ -258,7 +257,7 @@ HestonModel& HestonModel::operator=(const HestonModel& model)
 		_kappa = model._kappa;
 		_sigma_vol = model._sigma_vol;
 		_theta = model._theta;
-		_interest_rate = model._interest_rate;
+		_r = model._r;
 	}
 	return *this;
 }
@@ -266,7 +265,7 @@ HestonModel& HestonModel::operator=(const HestonModel& model)
 Vector HestonModel::drift_vector_term(const double& time, const Vector& asset_vector) const
 {
 	Vector drift_vector_term(2, 0.0);
-	drift_vector_term[0] = _interest_rate - max(asset_vector[1], 0.0)*0.5;
+	drift_vector_term[0] = _r - max(asset_vector[1], 0.0)*0.5;
 	drift_vector_term[1] = _kappa * (_theta - max(asset_vector[1], 0.0));
 	return drift_vector_term;
 }
@@ -299,7 +298,7 @@ double HestonModel::theta() const
 	return _theta;
 }
 
-double HestonModel::interest_rate() const
+double HestonModel::r() const
 {
-	return _interest_rate;
+	return _r;
 }

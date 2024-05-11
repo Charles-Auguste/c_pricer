@@ -1,10 +1,11 @@
-#include "Payoff.h"
+#include "Pricing.h"
 
 
 int main(){
-    cout << "Test Payoff" <<endl;
-    cout << "-----------" <<endl << endl;
+    cout << "Test Pricing" <<endl;
+    cout << "------------" <<endl << endl;
 
+    /*
     CALL_PUT call = CALL_PUT::CALL;
     CALL_PUT put = CALL_PUT::PUT;
 
@@ -45,5 +46,6 @@ int main(){
     cout << "\tPut payoff: " << as_put.payoff(price) << endl;
     cout << endl;
 
+    */
     return 0;
 };

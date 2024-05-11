@@ -44,7 +44,7 @@ class BlackScholesModel : public Model
 {
 public:
 	// 1) constructor
-	BlackScholesModel(const double& init_value, const double& drift, const double& volatility);
+	BlackScholesModel(const double& init_value, const double& r, const double& volatility);
 	BlackScholesModel(const BlackScholesModel& model);
 	BlackScholesModel(BlackScholesModel&& model) noexcept;
 	BlackScholesModel& operator=(const BlackScholesModel& model);
@@ -57,7 +57,7 @@ public:
 
 private:
 	// 3) member variables
-	double _drift;      // mu
+	double _r;      // mu
 	double _volatility; // sigma
 };
 
@@ -66,7 +66,7 @@ class BachelierModel : public Model
 {
 public:
 	// 1) constructor
-	BachelierModel(const double& init_value, const double& drift, const double& volatility);
+	BachelierModel(const double& init_value, const double& r, const double& volatility);
 	BachelierModel(const BachelierModel& model);
 	BachelierModel(BachelierModel&& model) noexcept;
 	BachelierModel& operator=(const BachelierModel& model);
@@ -79,7 +79,7 @@ public:
 
 private:
 	// 3) member variables
-	double _drift;      // mu
+	double _r;      // mu
 	double _volatility; // sigma
 };
 
@@ -87,7 +87,7 @@ private:
 class DupireLocalVolatilityModel : public Model
 {
 public:
-	DupireLocalVolatilityModel(double init_value, const ImpliedVolatilitySurface& implied_vol_surface, const double& eps_mat, const double& eps_strike);
+	DupireLocalVolatilityModel(double init_value, const ImpliedVolatilitySurface& implied_vol_surface, const double& eps_mat, const double& eps_strike, const double& r);
 	double drift_term(const double& time, const double& asset_price) const override;
 	double diffusion_term(const double& time, const double& asset_price) const override;
 	DupireLocalVolatilityModel* clone() const override;
@@ -105,6 +105,7 @@ private:
 	ImpliedVolatilitySurface _implied_volatility_surface;
 	double _epsilon_maturity; // dT
 	double _epsilon_strike;   // dK
+	double _r;
 };
 
 // +1D models
@@ -128,11 +129,6 @@ public:
 		return _initial_asset_vector;
 	}
 
-	virtual double sigma_vol() const = 0;
-	virtual double kappa() const = 0;
-	virtual double theta() const = 0;
-	virtual double interest_rate() const = 0;
-
 protected:
 	Vector _initial_asset_vector; // (S_0, V_0)
 };
@@ -141,7 +137,7 @@ protected:
 class HestonModel : public MdModel
 {
 public:
-	HestonModel(const Vector& initial_asset_vector,const double& kappa, const double& sigma_vol, const double& theta, const double& interest_rate); // parameters constructor
+	HestonModel(const Vector& initial_asset_vector,const double& kappa, const double& sigma_vol, const double& theta, const double& r); // parameters constructor
 	HestonModel(const HestonModel& model); // copy constructor
 	HestonModel& operator=(const HestonModel& model);
 	virtual ~HestonModel() = default;
@@ -151,16 +147,14 @@ public:
 
 	HestonModel* clone() const override;
 
-	virtual double sigma_vol() const override;
-	virtual double kappa() const override;
-	virtual double theta() const override;
-	virtual double interest_rate() const override;
-
+	double sigma_vol() const;
+	double kappa() const;
+	double theta() const;
+	double r() const;
 
 private:
-	//double _corr_rate;
 	double _kappa;
 	double _sigma_vol;
 	double _theta;
-	double _interest_rate;
+	double _r;
 };

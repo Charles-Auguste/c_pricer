@@ -141,7 +141,7 @@ MdPathSimulator& MdPathSimulator::operator=(const MdPathSimulator& path_simulato
 	return *this;
 }
 
-Matrix MdPathSimulator::path() const
+Vector MdPathSimulator::path() const
 {
 	Matrix _path;
 	int dim = _model_ptr->init_value().size();
@@ -167,7 +167,7 @@ Matrix MdPathSimulator::path() const
 			_path[k].push_back(next_asset_value[k]);
 	}
 
-	return _path;
+	return _path[0];
 }
 
 MdPathSimulator::~MdPathSimulator()
@@ -217,7 +217,7 @@ MdEulerPathSimulator* MdEulerPathSimulator::clone() const
 }
 
 // BroadieKayaPathSimulator
-BroadieKayaPathSimulator::BroadieKayaPathSimulator(const MdModel* model_ptr, const double& T, const size_t& nb_steps, const double& correlation):
+BroadieKayaPathSimulator::BroadieKayaPathSimulator(const HestonModel* model_ptr, const double& T, const size_t& nb_steps, const double& correlation):
 	MdPathSimulator(model_ptr, T, nb_steps, correlation)
 {
 }
@@ -308,7 +308,7 @@ double BroadieKayaPathSimulator::asset_next_step(size_t current_time_idx, const 
 	double delta_t = _time_points[current_time_idx + 1] - _time_points[current_time_idx];
 	double integral = integral_sampling(current_time_idx, current_asset_log_value[1]);
 	double next_asset_log_value = current_asset_log_value[0]
-			+ _model_ptr->interest_rate() * delta_t
+			+ _model_ptr->r() * delta_t
 			+ _correlation / _model_ptr->sigma_vol() * (var_next_step(current_time_idx, current_asset_log_value[1]) - current_asset_log_value[1] - _model_ptr->kappa()*_model_ptr->theta() * delta_t)
 			+ (_model_ptr->kappa()*_correlation/_model_ptr->sigma_vol() - 0.5) * integral
 			+ sqrt(max(integral, 0.0) * (1 - pow(_correlation,2))) * g; // gaussian distribution

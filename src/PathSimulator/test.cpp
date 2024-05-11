@@ -44,10 +44,10 @@ int main(){
 
 
     MdEulerPathSimulator he_path = MdEulerPathSimulator(&he_model, T, nb_plot, rho);
-    Matrix he_path_matrix = he_path.path();
+    Vector he_path_matrix = he_path.path();
     
-    for (size_t idx = 0; idx < he_path_matrix[0].size(); idx++){
-        cout << he_path_matrix[0][idx] << ", ";
+    for (size_t idx = 0; idx < he_path_matrix.size(); idx++){
+        cout << he_path_matrix[idx] << ", ";
     };
     cout << endl << endl;
 

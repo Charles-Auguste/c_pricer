@@ -137,12 +137,12 @@ public :
 	void implied_vol(const double& T, const double& K, const double& C) const;
 
 	// Calculation of the loss function from a volatility surface
-	double loss_function(const std::vector<std::vector<double>>& IV_surface) const; //bas� sur erreur L2 des vols avec pond�ration en vega
-	double loss_function_bis(const std::vector<std::vector<double>>& IV_surface) const; //bas� sur erreur L2 des prix avec pond�ration en vega^2
+	double loss_function(const Matrix& IV_surface) const; //L2 error on volatility weighted with vega
+	double loss_function_square(const Matrix& IV_surface) const; //L2 error on volatility weighted with vega2
 
 	// Optimization of the loss function (with Nelder Mead: simplex algorithm)
-	void calibration(const std::vector<std::vector<double>>& IV_surface) const;
-	void calibration_bis(const std::vector<std::vector<double>>& IV_surface) const;
+	void calibration(const Matrix& IV_surface) const;
+	void calibration_bis(const Matrix& IV_surface) const;
 
 private :
 	double _epsilon_iv; // error tolerated for calculating the IV
