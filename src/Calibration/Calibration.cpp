@@ -551,7 +551,7 @@ void OptimisationImpliedVolatility::calibration(const Matrix& IV_surface) const 
 		k++;
 
 		// Mise � jour du bool
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		arret = abs(((loss - loss_dx) / loss)) > tol;
 	}
 
@@ -585,36 +585,36 @@ void OptimisationImpliedVolatility::calibration_bis(const Matrix& IV_surface) co
 	int k = 0;
 	while (k < nb_iter and arret) {
 		//// Calcul du gradient 
-		loss = loss_function_bis(IV_surface);
+		loss = loss_function(IV_surface);
 		std::cout << "Fonction d'erreur :"<<loss << std::endl;
 		// Premi�re coordon�e
 		_model_ptr->SetKappa(params[0] + dx);
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		_model_ptr->SetKappa(params[0]);
 		gradient[0] = (loss_dx - loss) / dx;
 		//std::cout << "gradient 0 " << gradient[0] << std::endl;
 
 		// Deuxi�me 
 		_model_ptr->SetTheta(params[1] + dx);
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		_model_ptr->SetTheta(params[1]);
 		gradient[1] = (loss_dx - loss) / dx;
 
 		// Trois�me 
 		_model_ptr->SetSigma(params[2] + dx);
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		_model_ptr->SetSigma(params[2]);
 		gradient[2] = (loss_dx - loss) / dx;
 
 		// Quatri�me
 		_model_ptr->SetRho(params[3] + dx);
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		_model_ptr->SetRho(params[3]);
 		gradient[3] = (loss_dx - loss) / dx;
 
 		// Cinqui�me
 		_model_ptr->SetV0(params[4] + dx);
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		_model_ptr->SetV0(params[4]);
 		gradient[4] = (loss_dx - loss) / dx;
 
@@ -641,7 +641,7 @@ void OptimisationImpliedVolatility::calibration_bis(const Matrix& IV_surface) co
 		k++;
 
 		// Mise � jour du bool
-		loss_dx = loss_function_bis(IV_surface);
+		loss_dx = loss_function(IV_surface);
 		arret = abs(((loss - loss_dx) / loss)) > tol;
 	}
 
