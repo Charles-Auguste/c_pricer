@@ -63,12 +63,14 @@ SET(PUBLIC_HEADERS_FILES
 )
 
 set(TEST_SOURCE_FILES
-    "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.cpp"
-    "${LIBRARY_BASE_PATH}/src/PathSimulator/test.cpp"
-    "${LIBRARY_BASE_PATH}/src/Model/test.cpp"
-    "${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/test.cpp"
-    "${LIBRARY_BASE_PATH}/src/ThomasSolver/test.cpp"
-    "${LIBRARY_BASE_PATH}/src/Calibration/test.cpp"
+    "${LIBRARY_BASE_PATH}/test.hpp"
+    "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/PathSimulator/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/Model/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/ThomasSolver/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/Pricing/test.hpp"
+    "${LIBRARY_BASE_PATH}/src/Calibration/test.hpp"
     "${LIBRARY_BASE_PATH}/main.cpp"
 )
 
@@ -82,6 +84,7 @@ SET_TARGET_PROPERTIES (
 	VERSION		${LIBRARY_VERSION_STRING}
 	SOVERSION	${LIBRARY_VERSION_MAJOR}
 	PUBLIC_HEADER  "${PUBLIC_HEADERS_FILES}"
+    LINKER_LANGUAGE CXX
 )
 
 
@@ -89,8 +92,9 @@ SET_TARGET_PROPERTIES (
 #################################################################################################
 
 add_executable(test 
-    "${PUBLIC_HEADERS_FILES}" "${PUBLIC_SOURCES_FILES}" "${TEST_SOURCE_FILES}" 
+    "${PUBLIC_HEADERS_FILES}"
 )
+target_link_libraries(test PUBLIC ${BINARY_NAME})
 
 
 # ADDITIONNAL LIBRARIES

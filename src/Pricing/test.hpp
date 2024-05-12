@@ -1,7 +1,7 @@
 #include "Pricing.h"
 
 
-int main(){
+int test_Pricing(){
     cout << "Test Pricing" <<endl;
     cout << "------------" <<endl << endl;
 

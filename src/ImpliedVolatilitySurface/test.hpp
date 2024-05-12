@@ -1,6 +1,6 @@
 #include "ImpliedVolatilitySurface.h"
 
-int main(){
+int test_ImpliedVolatilitySurface(){
     cout << "Test for Implied Volatility surface" <<endl;
     cout << "-----------------------------------" <<endl << endl;
 

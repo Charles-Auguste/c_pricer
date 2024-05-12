@@ -1,7 +1,7 @@
 #include "Calibration.h"
 
 
-int main(){
+int test_Calibration(){
     cout << "Test Calibration" <<endl;
     cout << "----------------" <<endl << endl;
 

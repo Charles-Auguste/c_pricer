@@ -1,6 +1,6 @@
 #include "ThomasSolver.h"
 
-int main(){
+int test_ThomasSolver(){
     cout << "Test for Thomas solver" << endl;
     cout << "----------------------" << endl << endl;
     Vector central_diagonal {1,1,1,1};

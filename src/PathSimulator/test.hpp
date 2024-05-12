@@ -1,7 +1,7 @@
 #include "PathSimulator.h"
 
 
-int main(){
+int test_PathSimulator(){
     cout << "Test PathSimulator" <<endl;
     cout << "------------------" <<endl << endl;
     

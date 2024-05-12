@@ -1,8 +1,7 @@
 #include "MonteCarlo.h"
 #include "../src/Calibration/Calibration.h"
 
-
-int main(){
+int test_MonteCarlo(){
     cout << "Test MonteCarloEngine" <<endl;
     cout << "---------------------" <<endl << endl;
 
@@ -20,7 +19,7 @@ int main(){
     size_t nb_sims = 1000;
 
     EuropeanOptionPricing pricing_eu(K,type_option,r,T);
-    AsianPricing pricing_as(K,type_option,r,T);
+    AsianOptionPricing pricing_as(K,type_option,r,T);
 
     // 2) Model, PathSimulator & Payoff
     BlackScholesModel bs_model(S0, r, volatility);

@@ -1,7 +1,7 @@
 #include "Model.h"
 
 
-int main(){
+int test_Model(){
     cout << "Test Model" <<endl;
     cout << "----------" <<endl << endl;
     
