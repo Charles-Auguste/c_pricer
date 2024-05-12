@@ -51,6 +51,7 @@ SET(PUBLIC_SOURCES_FILES
 	"${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/ImpliedVolatilitySurface.cpp"
 	"${LIBRARY_BASE_PATH}/src/ThomasSolver/ThomasSolver.cpp"
     "${LIBRARY_BASE_PATH}/src/Calibration/Calibration.cpp"
+    "${LIBRARY_BASE_PATH}/src/Pricing/Pricing.cpp"
 )
 
 SET(PUBLIC_HEADERS_FILES
@@ -60,10 +61,10 @@ SET(PUBLIC_HEADERS_FILES
     "${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
     "${LIBRARY_BASE_PATH}/src/ThomasSolver/ThomasSolver.h"
     "${LIBRARY_BASE_PATH}/src/Calibration/Calibration.h"
+    "${LIBRARY_BASE_PATH}/src/Pricing/Pricing.h"
 )
 
 set(TEST_SOURCE_FILES
-    "${LIBRARY_BASE_PATH}/test.hpp"
     "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.hpp"
     "${LIBRARY_BASE_PATH}/src/PathSimulator/test.hpp"
     "${LIBRARY_BASE_PATH}/src/Model/test.hpp"
@@ -71,7 +72,6 @@ set(TEST_SOURCE_FILES
     "${LIBRARY_BASE_PATH}/src/ThomasSolver/test.hpp"
     "${LIBRARY_BASE_PATH}/src/Pricing/test.hpp"
     "${LIBRARY_BASE_PATH}/src/Calibration/test.hpp"
-    "${LIBRARY_BASE_PATH}/main.cpp"
 )
 
 # Ajoutez une source à l'exécutable de ce projet.
@@ -91,10 +91,11 @@ SET_TARGET_PROPERTIES (
 # Test
 #################################################################################################
 
-add_executable(test 
+add_executable(test main.cpp
     "${PUBLIC_HEADERS_FILES}"
 )
 target_link_libraries(test PUBLIC ${BINARY_NAME})
+set_target_properties(test PROPERTIES LINKER_LANGUAGE CXX) 
 
 
 # ADDITIONNAL LIBRARIES

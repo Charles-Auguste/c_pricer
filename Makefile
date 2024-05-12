@@ -1,15 +1,66 @@
-# C++ commands
-# ============
-# Build the whole cmake project
-build:
-	@cmake . -B build_/
-	@make -C build_/. -j 10
+# =============================================================================
+# Global MakeFile of the project
+# These instructions are meant to help building and installing the program.
+# 
+# Author: Charles-Auguste GOURIO
+#
+# To run a command on a terminal, please use:
+#
+# $ make <command>
+#
+# =============================================================================
 
-execute_test:
-	@(cd build_/; ./run)
+setup:
+	@sudo apt install clang-format
+
+
+# Cmake things
+# ============
+
+configure:
+	@cmake . -B build_/
 
 clean:
-	@rm -rf build_/
+	@echo "Cleaning ..."
+	rm -rf build_/
+
+build: configure
+	@echo "Building ..."
+	@cd build_/ ; cmake --build . --config Release -j 10
+
+clean_build: clean
+	@make build
+
+install:
+	@echo "Installing the library ..."
+
+delete:
+	@echo "Cleaning the install ..."
+
+clean_install: delete
+	@make install
+
+dev_install:
+	@echo "Dev install ..."
+
+
+# Code Quality
+# ============
+
+format_code:
+	@echo "Format code ..."
+	@find ./src -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec sh -c 'printf "%s\n" "$$0"; clang-format -i "$$0"' {} \;
+	@find ./MonteCarloEngine -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec sh -c 'printf "%s\n" "$$0"; clang-format -i "$$0"' {} \;
+
+
+# Unitest
+# =======
+
+test: build
+	@echo "testing ..."
+	@cd build_/; ./test
+
+
 
 
 
