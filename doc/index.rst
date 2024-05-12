@@ -6,4 +6,3 @@ C++ Pricer Documentation
    :caption: Contents:
 
    /src/main.rst
-   /src/writer.rst
