@@ -1,6 +1,7 @@
 # Build folders
 **/build_/**
 **/_build/**
+**/build/**
 .vscode/
 __pycache__
 .python-version

@@ -6,10 +6,7 @@ namespace TestMonteCarloEngine {
 
 class TestMonteCarloEngine : public testing::Test {
 protected:
-  virtual void SetUp() {
-    pricing_eu = EuropeanOptionPricing(K, type_option, r, T);
-    pricing_as = AsianOptionPricing(K, type_option, r, T);
-  }
+  virtual void SetUp() {}
   // 1) Parameters
   double S0 = 100.;
   double r = 0.03;
@@ -28,13 +25,14 @@ protected:
   CALL_PUT type_option = CALL_PUT::CALL;
 
   size_t nb_sims = 1000;
-  EuropeanOptionPricing pricing_eu;
-  AsianOptionPricing pricing_as;
 };
 
 TEST_F(TestMonteCarloEngine, OneDimensionTest) {
   BlackScholesModel bs_model(S0, r, volatility);
   EulerPathSimulator bs_path(&bs_model, T, nb_points);
+  EuropeanOptionPricing pricing_eu =
+      EuropeanOptionPricing(K, type_option, r, T);
+  AsianOptionPricing pricing_as = AsianOptionPricing(K, type_option, r, T);
 
   MonteCarlo bs_simulation_eu(nb_sims, bs_path, pricing_eu);
   MonteCarlo bs_simulation_as(nb_sims, bs_path, pricing_as);
@@ -49,8 +47,10 @@ TEST_F(TestMonteCarloEngine, OneDimensionTest) {
 TEST_F(TestMonteCarloEngine, MultiDimensionTest) {
   HestonModel he_model(init_values, kappa, sigma, theta, r);
   MdEulerPathSimulator he_path(&he_model, T, nb_points, rho);
+  EuropeanOptionPricing pricing_eu =
+      EuropeanOptionPricing(K, type_option, r, T);
+  AsianOptionPricing pricing_as = AsianOptionPricing(K, type_option, r, T);
 
-  // 6) Simulations
   MdMonteCarlo he_simulation_eu(nb_sims, he_path, pricing_eu);
   MdMonteCarlo he_simulation_as(nb_sims, he_path, pricing_as);
   double price_eu = he_simulation_eu.price();

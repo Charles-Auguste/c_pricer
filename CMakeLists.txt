@@ -65,13 +65,13 @@ SET(PUBLIC_HEADERS_FILES
 )
 
 set(TEST_SOURCE_FILES
-    #"${LIBRARY_BASE_PATH}/MonteCarloEngine/test.cpp"
-    #"${LIBRARY_BASE_PATH}/PathSimulator/test.cpp"
-    #"${LIBRARY_BASE_PATH}/Model/test.cpp"
-    #"${LIBRARY_BASE_PATH}/ImpliedVolatilitySurface/test.cpp"
+    "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.cpp"
+    "${LIBRARY_BASE_PATH}/PathSimulator/test.cpp"
+    "${LIBRARY_BASE_PATH}/Model/test.cpp"
+    "${LIBRARY_BASE_PATH}/ImpliedVolatilitySurface/test.cpp"
     "${LIBRARY_BASE_PATH}/ThomasSolver/test.cpp"
-    #"${LIBRARY_BASE_PATH}/Pricing/test.cpp"
-    #"${LIBRARY_BASE_PATH}/Calibration/test.cpp"
+    "${LIBRARY_BASE_PATH}/Pricing/test.cpp"
+    "${LIBRARY_BASE_PATH}/Calibration/test.cpp"
 )
 
 # Ajoutez une source à l'exécutable de ce projet.

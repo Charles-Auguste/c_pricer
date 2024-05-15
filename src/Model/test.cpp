@@ -13,8 +13,6 @@ protected:
       };
       market_volatilities.push_back(volatilities);
     }
-    surface_instance = ImpliedVolatilitySurface(
-        maturities, strikes, market_volatilities, risk_free_rate);
   }
 
   double init_value = 100;
@@ -28,7 +26,6 @@ protected:
   Vector strikes{90, 100, 110, 120};
   Vector maturities{0.5, 1, 1.5, 2};
   Matrix market_volatilities;
-  ImpliedVolatilitySurface surface_instance;
   double risk_free_rate = 0.03;
 
   // For Heston
@@ -65,6 +62,8 @@ TEST_F(TestModel, TestBachelierModel) {
 
 TEST_F(TestModel, TestDupireLocalVolatilityModel) {
   cout << "DupireLocalVolatilityModel" << endl;
+  ImpliedVolatilitySurface surface_instance = ImpliedVolatilitySurface(
+      maturities, strikes, market_volatilities, risk_free_rate);
   DupireLocalVolatilityModel du_model =
       DupireLocalVolatilityModel(init_value, surface_instance, epsilon_maturity,
                                  epsilon_strike, risk_free_rate);

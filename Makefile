@@ -22,15 +22,15 @@ setup:
 # ============
 
 configure:
-	@cmake . -B build_/
+	@cmake . -B build/
 
 clean:
 	@echo "Cleaning ..."
-	rm -rf build_/
+	rm -rf build/
 
 build_project: 
 	@echo "Building ..."
-	@cd build_/ ; cmake --build . --config Release -j 10
+	@cd build/ ; cmake --build . --config Release -j 10
 
 
 # Code Quality
@@ -46,7 +46,7 @@ format_code:
 
 test:
 	@echo "testing ..."
-	@cd build_/; ./test
+	@cd build/; ./test
 
 
 

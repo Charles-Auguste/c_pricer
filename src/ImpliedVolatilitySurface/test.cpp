@@ -6,9 +6,6 @@ namespace TestImpliedVolatilitySurface {
 class TestImpliedVolatilitySurface : public testing::Test {
 protected:
   virtual void SetUp() {
-    Vector strikes{90, 100, 110, 120};
-    Vector maturities{0.5, 1, 1.5, 2};
-    Matrix market_volatilities;
     for (size_t k = 0; k < 4; k++) {
       Vector volatilities;
       for (size_t l = 0; l < 4; l++) {
@@ -16,16 +13,19 @@ protected:
       };
       market_volatilities.push_back(volatilities);
     };
-    double risk_free_rate = 0.03;
-
-    surface_instance = ImpliedVolatilitySurface(
-        maturities, strikes, market_volatilities, risk_free_rate);
   }
+  virtual void TearDown() {};
 
-  ImpliedVolatilitySurface surface_instance;
+  double risk_free_rate = 0.03;
+  Vector strikes{90, 100, 110, 120};
+  Vector maturities{0.5, 1, 1.5, 2};
+  Matrix market_volatilities;
 };
 
 TEST_F(TestImpliedVolatilitySurface, Test1) {
+
+  ImpliedVolatilitySurface surface_instance = ImpliedVolatilitySurface(
+      maturities, strikes, market_volatilities, risk_free_rate);
   double strike1 = 90;
   double maturity1 = 1.5;
   cout << "Inputs 1:" << endl
@@ -37,6 +37,9 @@ TEST_F(TestImpliedVolatilitySurface, Test1) {
 }
 
 TEST_F(TestImpliedVolatilitySurface, Test2) {
+
+  ImpliedVolatilitySurface surface_instance = ImpliedVolatilitySurface(
+      maturities, strikes, market_volatilities, risk_free_rate);
   double strike2 = 95;
   double maturity2 = 1.25;
   cout << "Inputs 2:" << endl
@@ -48,6 +51,9 @@ TEST_F(TestImpliedVolatilitySurface, Test2) {
 }
 
 TEST_F(TestImpliedVolatilitySurface, Test3) {
+
+  ImpliedVolatilitySurface surface_instance = ImpliedVolatilitySurface(
+      maturities, strikes, market_volatilities, risk_free_rate);
   double strike3 = 200;
   double maturity3 = 3;
   cout << "Inputs 3:" << endl
