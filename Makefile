@@ -12,6 +12,10 @@
 
 setup:
 	@sudo apt install clang-format
+	@sudo apt-get install libgtest-dev
+	@cd /usr/src/gtest; sudo cmake CMakeLists.txt; sudo make
+	@cd /usr/src/gtest; sudo cp -r include/gtest /usr/local/include/.
+	@cd /usr/src/gtest; sudo cp -r lib/*.a /usr/local/lib/.
 
 
 # Cmake things
@@ -35,9 +39,8 @@ build_project:
 format_code:
 	@echo "Format code ..."
 	@find ./src -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec sh -c 'printf "%s\n" "$$0"; clang-format -i "$$0"' {} \;
-	@find ./MonteCarloEngine -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec sh -c 'printf "%s\n" "$$0"; clang-format -i "$$0"' {} \;
-
-
+	
+	
 # Unitest
 # =======
 

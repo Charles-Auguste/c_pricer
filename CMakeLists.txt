@@ -27,7 +27,7 @@ INCLUDE(GNUInstallDirs)
 
 project("${PROJECT_NAME}" DESCRIPTION "${PROJECT_DESCRIPTION}")
 
-SET(LIBRARY_BASE_PATH "${PROJECT_SOURCE_DIR}")
+SET(LIBRARY_BASE_PATH "${PROJECT_SOURCE_DIR}/src")
 message("Library Base path : " ${LIBRARY_BASE_PATH})
 
 INCLUDE_DIRECTORIES (
@@ -46,32 +46,32 @@ set(EIGEN_PATH_INCLUDE "/usr/local/include")
 
 SET(PUBLIC_SOURCES_FILES
 	"${LIBRARY_BASE_PATH}/MonteCarloEngine/MonteCarlo.cpp"
-	"${LIBRARY_BASE_PATH}/src/PathSimulator/PathSimulator.cpp"
-	"${LIBRARY_BASE_PATH}/src/Model/Model.cpp"
-	"${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/ImpliedVolatilitySurface.cpp"
-	"${LIBRARY_BASE_PATH}/src/ThomasSolver/ThomasSolver.cpp"
-    "${LIBRARY_BASE_PATH}/src/Calibration/Calibration.cpp"
-    "${LIBRARY_BASE_PATH}/src/Pricing/Pricing.cpp"
+	"${LIBRARY_BASE_PATH}/PathSimulator/PathSimulator.cpp"
+	"${LIBRARY_BASE_PATH}/Model/Model.cpp"
+	"${LIBRARY_BASE_PATH}/ImpliedVolatilitySurface/ImpliedVolatilitySurface.cpp"
+	"${LIBRARY_BASE_PATH}/ThomasSolver/ThomasSolver.cpp"
+    "${LIBRARY_BASE_PATH}/Calibration/Calibration.cpp"
+    "${LIBRARY_BASE_PATH}/Pricing/Pricing.cpp"
 )
 
 SET(PUBLIC_HEADERS_FILES
     "${LIBRARY_BASE_PATH}/MonteCarloEngine/MonteCarlo.h"
-    "${LIBRARY_BASE_PATH}/src/PathSimulator/PathSimulator.h"
-    "${LIBRARY_BASE_PATH}/src/Model/Model.h"
-    "${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
-    "${LIBRARY_BASE_PATH}/src/ThomasSolver/ThomasSolver.h"
-    "${LIBRARY_BASE_PATH}/src/Calibration/Calibration.h"
-    "${LIBRARY_BASE_PATH}/src/Pricing/Pricing.h"
+    "${LIBRARY_BASE_PATH}/PathSimulator/PathSimulator.h"
+    "${LIBRARY_BASE_PATH}/Model/Model.h"
+    "${LIBRARY_BASE_PATH}/ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
+    "${LIBRARY_BASE_PATH}/ThomasSolver/ThomasSolver.h"
+    "${LIBRARY_BASE_PATH}/Calibration/Calibration.h"
+    "${LIBRARY_BASE_PATH}/Pricing/Pricing.h"
 )
 
 set(TEST_SOURCE_FILES
-    "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/PathSimulator/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/Model/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/ImpliedVolatilitySurface/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/ThomasSolver/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/Pricing/test.hpp"
-    "${LIBRARY_BASE_PATH}/src/Calibration/test.hpp"
+    "${LIBRARY_BASE_PATH}/MonteCarloEngine/test.cpp"
+    "${LIBRARY_BASE_PATH}/PathSimulator/test.cpp"
+    "${LIBRARY_BASE_PATH}/Model/test.cpp"
+    "${LIBRARY_BASE_PATH}/ImpliedVolatilitySurface/test.cpp"
+    "${LIBRARY_BASE_PATH}/ThomasSolver/test.cpp"
+    "${LIBRARY_BASE_PATH}/Pricing/test.cpp"
+    "${LIBRARY_BASE_PATH}/Calibration/test.cpp"
 )
 
 # Ajoutez une source à l'exécutable de ce projet.
@@ -91,10 +91,15 @@ SET_TARGET_PROPERTIES (
 # Test
 #################################################################################################
 
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
 add_executable(test main.cpp
     "${PUBLIC_HEADERS_FILES}"
 )
-target_link_libraries(test PUBLIC ${BINARY_NAME})
+
+target_link_libraries(test PUBLIC ${BINARY_NAME} ${GTEST_LIBRARIES} pthread)
+
 set_target_properties(test PROPERTIES LINKER_LANGUAGE CXX) 
 
 

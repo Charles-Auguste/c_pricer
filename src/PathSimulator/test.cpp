@@ -1,9 +1,10 @@
 #include "PathSimulator.h"
+#include <gtest/gtest.h>
 
-int test_PathSimulator() {
-  cout << "Test PathSimulator" << endl;
-  cout << "------------------" << endl << endl;
+namespace TestPathSimulator {
 
+class TestPathSimulator : public testing::Test {
+protected:
   // 1) Parameters
   double init_value = 100; // Initial spot price
   // For B&S and Bachelier
@@ -19,8 +20,9 @@ int test_PathSimulator() {
   // For simulation
   double T = 1.00; // One year until expiry
   double nb_plot = 10;
+};
 
-  // 2) Generate a path for black & scholes model
+TEST_F(TestPathSimulator, BlackScholes) {
   cout << "Black & Scholes model" << endl;
   BlackScholesModel bs_model(init_value, drift, volatility);
   cout << "BS model address: " << &bs_model << endl << endl;
@@ -32,8 +34,10 @@ int test_PathSimulator() {
     cout << bs_path_vect[idx] << ", ";
   };
   cout << endl << endl;
+  ASSERT_TRUE(1 == 1);
+}
 
-  // 3) Generate a path for Heston model
+TEST_F(TestPathSimulator, AmericanOption) {
   cout << "Heston model" << endl;
   Vector init_values_heston{init_value, v_0};
   HestonModel he_model(init_values_heston, kappa, xi, theta, r);
@@ -47,6 +51,6 @@ int test_PathSimulator() {
     cout << he_path_matrix[idx] << ", ";
   };
   cout << endl << endl;
-
-  return 0;
-};
+  ASSERT_TRUE(1 == 1);
+}
+}; // namespace TestPathSimulator

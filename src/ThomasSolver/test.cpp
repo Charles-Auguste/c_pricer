@@ -1,6 +1,8 @@
 #include "ThomasSolver.h"
+#include <gtest/gtest.h>
 
-int test_ThomasSolver() {
+namespace TestThomasSolver {
+TEST(TestThomasSolver, Test) {
   cout << "Test for Thomas solver" << endl;
   cout << "----------------------" << endl << endl;
   Vector central_diagonal{1, 1, 1, 1};
@@ -14,5 +16,6 @@ int test_ThomasSolver() {
   for (size_t k = 0; k < result.size(); k++) {
     cout << "Result index " << k << ": \t" << result[k] << endl;
   };
-  return 0;
-};
+  ASSERT_TRUE(1 == 1);
+}
+}; // namespace TestThomasSolver

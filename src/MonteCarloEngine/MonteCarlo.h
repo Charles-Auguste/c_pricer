@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../src/PathSimulator/PathSimulator.h"
-#include "../src/Pricing/Pricing.h"
+#include "PathSimulator/PathSimulator.h"
+#include "Pricing/Pricing.h"
 
 #include <algorithm>
 #include <cmath>

@@ -1,4 +1,4 @@
-#include "../src/Calibration/Calibration.h"
+#include "Calibration/Calibration.h"
 #include "MonteCarlo.h"
 
 int test_MonteCarlo() {
