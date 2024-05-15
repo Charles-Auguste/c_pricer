@@ -39,7 +39,7 @@ protected:
   double interest_rate = 0.03;
 };
 
-TEST_F(TestModel, BlackScholesModel) {
+TEST_F(TestModel, TestBlackScholesModel) {
   cout << "BlackScholesModel" << endl;
   BlackScholesModel bs_model = BlackScholesModel(init_value, drift, volatility);
   cout << "\tInitial value: " << bs_model.init_value() << endl;
@@ -51,7 +51,7 @@ TEST_F(TestModel, BlackScholesModel) {
   ASSERT_TRUE(1 == 1);
 }
 
-TEST_F(TestModel, BachelierModel) {
+TEST_F(TestModel, TestBachelierModel) {
   cout << "BachelierModel" << endl;
   BachelierModel ba_model = BachelierModel(init_value, drift, volatility);
   cout << "\tInitial value: " << ba_model.init_value() << endl;
@@ -63,7 +63,7 @@ TEST_F(TestModel, BachelierModel) {
   ASSERT_TRUE(1 == 1);
 }
 
-TEST_F(TestModel, DupireLocalVolatilityModel) {
+TEST_F(TestModel, TestDupireLocalVolatilityModel) {
   cout << "DupireLocalVolatilityModel" << endl;
   DupireLocalVolatilityModel du_model =
       DupireLocalVolatilityModel(init_value, surface_instance, epsilon_maturity,
@@ -77,7 +77,7 @@ TEST_F(TestModel, DupireLocalVolatilityModel) {
   ASSERT_TRUE(1 == 1);
 }
 
-TEST_F(TestModel, HestonModel) {
+TEST_F(TestModel, TestHestonModel) {
   cout << "HestonModel" << endl;
   HestonModel he_model =
       HestonModel(initial_asset_vector, kappa, sigma_vol, theta, interest_rate);

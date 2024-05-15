@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Model/Model.h"
+#include "Model/Model.h"
 
 #include <random>
 #include <vector>

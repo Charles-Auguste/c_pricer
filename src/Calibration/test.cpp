@@ -1,21 +1,24 @@
 #include "Calibration.h"
+#include <gtest/gtest.h>
 
-int test_Calibration() {
-  cout << "Test Calibration" << endl;
-  cout << "----------------" << endl << endl;
+namespace TestCalibration {
 
-  // test volatility surface
+class TestCalibration : public testing::Test {
+protected:
+  virtual void SetUp() {
+    // Defining models
+    IV_surface = {{0., 20., 40., 60., 80., 100., 120., 140., 160., 180.},
+                  {0.25, 0.39, 0.31, 0.24, 0.22, 0.16, 0.19, 0.23, 0.29, 0.38},
+                  {0.5, 0.44, 0.36, 0.27, 0.21, 0.17, 0.21, 0.27, 0.35, 0.4},
+                  {0.75, 0.45, 0.3, 0.25, 0.21, 0.18, 0.22, 0.29, 0.37, 0.45},
+                  {1., 0.48, 0.42, 0.34, 0.28, 0.2, 0.26, 0.31, 0.42, 0.5},
+                  {2., 0.52, 0.43, 0.34, 0.26, 0.21, 0.27, 0.38, 0.45, 0.55},
+                  {3., 0.54, 0.46, 0.34, 0.27, 0.23, 0.28, 0.36, 0.49, 0.58},
+                  {4., 0.57, 0.5, 0.46, 0.35, 0.25, 0.32, 0.45, 0.54, 0.6},
+                  {5., 0.6, 0.52, 0.41, 0.31, 0.26, 0.34, 0.4, 0.55, 0.62}};
+  }
+
   Matrix IV_surface;
-  IV_surface = {{0., 20., 40., 60., 80., 100., 120., 140., 160., 180.},
-                {0.25, 0.39, 0.31, 0.24, 0.22, 0.16, 0.19, 0.23, 0.29, 0.38},
-                {0.5, 0.44, 0.36, 0.27, 0.21, 0.17, 0.21, 0.27, 0.35, 0.4},
-                {0.75, 0.45, 0.3, 0.25, 0.21, 0.18, 0.22, 0.29, 0.37, 0.45},
-                {1., 0.48, 0.42, 0.34, 0.28, 0.2, 0.26, 0.31, 0.42, 0.5},
-                {2., 0.52, 0.43, 0.34, 0.26, 0.21, 0.27, 0.38, 0.45, 0.55},
-                {3., 0.54, 0.46, 0.34, 0.27, 0.23, 0.28, 0.36, 0.49, 0.58},
-                {4., 0.57, 0.5, 0.46, 0.35, 0.25, 0.32, 0.45, 0.54, 0.6},
-                {5., 0.6, 0.52, 0.41, 0.31, 0.26, 0.34, 0.4, 0.55, 0.62}};
-
   double S0 = 100; // Initial Spot
   double r = 0.05; // Risk free rate
 
@@ -25,12 +28,12 @@ int test_Calibration() {
   double sigma = 0.591923; // Volatility of volatility
   double rho = -0.732991;  // correlation
   double v0 = 0;           // initial variance
+};
 
-  // Defining models
+TEST_F(TestCalibration, TestOfCalibration) {
+  // New instance of OptimisationImpliedVolatility
   ExplicitHestonModel model_test(kappa, theta, sigma, rho, v0, S0, r);
   ExplicitBlackScholesModel model_bs(S0, r, 0.5);
-
-  // New instance of OptimisationImpliedVolatility
   OptimisationImpliedVolatility optim(0.000001, model_test, model_bs);
 
   // Optimisation test
@@ -77,6 +80,7 @@ int test_Calibration() {
   std::cout << test << std::endl;
   optim.implied_vol(0.25, 60., test);
   std::cout << optim.GetBSModelPtr()->GetSigma() << std::endl;
+  ASSERT_TRUE(1 == 1);
+}
 
-  return 0;
-};
+}; // namespace TestCalibration

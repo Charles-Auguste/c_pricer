@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
+#include "ImpliedVolatilitySurface/ImpliedVolatilitySurface.h"
 
 #include <vector>
 using Vector = std::vector<double>;
