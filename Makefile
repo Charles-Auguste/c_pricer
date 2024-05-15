@@ -24,24 +24,9 @@ clean:
 	@echo "Cleaning ..."
 	rm -rf build_/
 
-build: configure
+build_project: 
 	@echo "Building ..."
 	@cd build_/ ; cmake --build . --config Release -j 10
-
-clean_build: clean
-	@make build
-
-install:
-	@echo "Installing the library ..."
-
-delete:
-	@echo "Cleaning the install ..."
-
-clean_install: delete
-	@make install
-
-dev_install:
-	@echo "Dev install ..."
 
 
 # Code Quality
@@ -56,7 +41,7 @@ format_code:
 # Unitest
 # =======
 
-test: build
+test:
 	@echo "testing ..."
 	@cd build_/; ./test
 
