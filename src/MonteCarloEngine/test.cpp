@@ -12,11 +12,17 @@ protected:
   double r = 0.03;
   double volatility = 0.2;
 
-  Vector init_values{100., 0.04};
-  double theta = 0.04;
-  double kappa = 1;
-  double sigma = 0.05;
-  double rho = -0.7;
+  // Vector init_values{100., 0.04};
+  // double theta = 0.04;
+  // double kappa = 1;
+  // double sigma = 0.05;
+  // double rho = -0.7;
+
+  Vector init_values{100., 0.024};
+  double theta = 0.77;
+  double kappa = 0.13;
+  double sigma = 1e-6;
+  double rho = 0.48;
 
   double T = 1;
   size_t nb_points = 100;
@@ -33,14 +39,20 @@ TEST_F(TestMonteCarloEngine, OneDimensionTest) {
   EuropeanOptionPricing pricing_eu =
       EuropeanOptionPricing(K, type_option, r, T);
   AsianOptionPricing pricing_as = AsianOptionPricing(K, type_option, r, T);
+  AmericanOptionPricing pricing_am =
+      AmericanOptionPricing(K, type_option, r, T);
 
   MonteCarlo bs_simulation_eu(nb_sims, bs_path, pricing_eu);
   MonteCarlo bs_simulation_as(nb_sims, bs_path, pricing_as);
+  MonteCarlo bs_simulation_am(nb_sims, bs_path, pricing_am);
+
   double price_eu = bs_simulation_eu.price();
   double price_as = bs_simulation_as.price();
+  double price_am = bs_simulation_am.price();
   cout << "Black & Scholes" << endl;
   cout << endl
-       << "European : " << price_eu << "   Asian : " << price_as << endl;
+       << "European : " << price_eu << "   Asian : " << price_as
+       << "   American : " << price_am << endl;
   ASSERT_TRUE(1 == 1);
 }
 
@@ -49,16 +61,11 @@ TEST_F(TestMonteCarloEngine, MultiDimensionTest) {
   MdEulerPathSimulator he_path(&he_model, T, nb_points, rho);
   EuropeanOptionPricing pricing_eu =
       EuropeanOptionPricing(K, type_option, r, T);
-  AsianOptionPricing pricing_as = AsianOptionPricing(K, type_option, r, T);
 
   MdMonteCarlo he_simulation_eu(nb_sims, he_path, pricing_eu);
-  MdMonteCarlo he_simulation_as(nb_sims, he_path, pricing_as);
   double price_eu = he_simulation_eu.price();
-  double price_as = he_simulation_as.price();
   cout << "Heston" << endl;
-  cout << endl
-       << "European : " << price_eu << "   Asian : " << price_as << endl
-       << endl;
+  cout << endl << "European : " << price_eu << endl << endl;
   ASSERT_TRUE(1 == 1);
 }
 

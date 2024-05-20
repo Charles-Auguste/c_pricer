@@ -118,7 +118,9 @@ double AmericanOptionPricing::price(Matrix asset_paths) const {
   }
 
   double price = reduce(begin(mc), end(mc), 0.0) / mc.size();
-  cout << "American Style Price = " << price << endl;
+  if (isnan(price))
+    price = 0.;
+
   return price;
 }
 

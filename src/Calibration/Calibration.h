@@ -21,6 +21,8 @@ using namespace std;
 const Complex i(0, 1);
 const double pi = 2 * acos(0.0);
 
+enum class LOSS_FUNCTION { VOL, CALL };
+
 class ExplicitModel {
 public:
   ExplicitModel();
@@ -141,8 +143,7 @@ public:
       const; // L2 error on volatility weighted with vega2
 
   // Optimization of the loss function (with Nelder Mead: simplex algorithm)
-  void calibration(const Matrix &IV_surface) const;
-  void calibration_bis(const Matrix &IV_surface) const;
+  void calibration(const Matrix &IV_surface, LOSS_FUNCTION func_loss) const;
 
 private:
   double _epsilon_iv; // error tolerated for calculating the IV
