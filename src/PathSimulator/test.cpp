@@ -37,7 +37,7 @@ TEST_F(TestPathSimulator, BlackScholes) {
   ASSERT_TRUE(1 == 1);
 }
 
-TEST_F(TestPathSimulator, AmericanOption) {
+TEST_F(TestPathSimulator, HestonModel) {
   cout << "Heston model" << endl;
   Vector init_values_heston{init_value, v_0};
   HestonModel he_model(init_values_heston, kappa, xi, theta, r);
