@@ -156,6 +156,7 @@ We start in the `gtest` folder (`/usr/src/gtest`)
 .. note::
 
   One can find more information on `Gtest` library `here <https://github.com/google/googletest>`__
+  You can also run `make setup` command to install the library.
 
 
 Test and dry run
@@ -219,6 +220,10 @@ build, clean and format the library.
 As you can see, the building configuration has been saved to `/build` folder. Now one
 can esasily compile the library.
 
+.. image:: /_static/images/cmake_term.png
+  :width: 800
+  :align: center
+
 .. note::
 
   `$ make clean` instruction kindly remove the build directory (and the `CMakeCache.txt` file). It is usefull if some changes has been done to the `CMakeList.txt` file.
@@ -260,8 +265,14 @@ can esasily compile the library.
   Gtest framework allows us to launch each test individually.
 
 
-Using the Library
------------------
+**On visual Studio Code**
+
+All these steps can also be done one `Visual studio code`. With the shortcut `Ctrl + Maj
++ P`, you can configure, build and clean rebuild the project !!
+
+.. image:: /_static/images/cmake_vs.png
+  :width: 800
+  :align: center
 
 
 ===================================
@@ -345,7 +356,6 @@ Let's take a look at the `CMakeList.txt` file and analyse it.
     "${LIBRARY_BASE_PATH}"
   )
 
-| 
 
 **Files to compile ...**
 
@@ -375,7 +385,6 @@ Let's take a look at the `CMakeList.txt` file and analyse it.
     "${LIBRARY_BASE_PATH}/Calibration/test.cpp"
   )
 
-|
 
 **Building the library**
 
@@ -396,7 +405,6 @@ Let's take a look at the `CMakeList.txt` file and analyse it.
       LINKER_LANGUAGE CXX
   )
 
-|
 
 **Building the executable**
 
@@ -418,7 +426,6 @@ Let's take a look at the `CMakeList.txt` file and analyse it.
 
   set_target_properties(test PROPERTIES LINKER_LANGUAGE CXX) 
   
-|
 
 **Dependencies (Eigen)**
 
@@ -431,7 +438,6 @@ Let's take a look at the `CMakeList.txt` file and analyse it.
     message("Cannot find Eigen. Make sure you install it correctly")
   endif()
 
-|
 
 That's it. Now and to summarize, the purpose of this file is to give building
 instruction to our compiler. Our project is building two things:
@@ -495,6 +501,7 @@ framework).
 
 .. image:: /_static/images/test.png
   :width: 800
+  :align: center
 
 
 Classes and objects
@@ -502,9 +509,9 @@ Classes and objects
 
 A good way to understand our library is by taking a closer look at the class diagramm
 
-
 .. image:: /_static/images/mermaid.png
   :width: 800
+  :align: center
 
 
 Modules and Submodules
@@ -513,17 +520,42 @@ Modules and Submodules
 Thomas Solver & Implied Volatility Surface
 ------------------------------------------
 
+.. image:: /_static/images/thomas.png
+  :width: 200
+  :align: center
+
 Model
 -----
+
+.. image:: /_static/images/model.png
+  :width: 400
+  :align: center
 
 Path Simulator
 --------------
 
+.. image:: /_static/images/path_simulator.png
+  :width: 400
+  :align: center
+
 Pricing
 -------
+
+.. image:: /_static/images/pricing.png
+  :width: 400
+  :align: center
+
 
 Calibration
 -----------
 
+.. image:: /_static/images/optim.png
+  :width: 400
+  :align: center
+
 Monte Carlo Engine
 ------------------
+
+.. image:: /_static/images/montecarlo.png
+  :width: 400
+  :align: center

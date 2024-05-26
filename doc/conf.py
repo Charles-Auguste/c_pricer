@@ -9,7 +9,7 @@
 project = 'C++-Pricer'
 html_title = 'C++Pricer'
 copyright = '2023, Charles-Auguste GOURIO'
-author = 'Charles-Auguste GOURIO'
+author = 'Charles-Auguste GOURIO, Grégoire Ounnoughene'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,7 +42,7 @@ html_static_path = ['_static']
 #   https://github.com/mermaid-js/mermaid-cli
 
 
-title = "C++ Pricer - Derivatives"
+title = "C++ Project - Monte Carlo Pricing Engine"
 latex_documents = [('index', 'pricer.tex', title, author, 'howto')]
 latex_elements = {
   'preamble': r'\usepackage{unicode-math}',
@@ -52,8 +52,8 @@ latex_elements = {
   # 'classoptions': ',twocolumn',    # to have two columns
   'tableofcontents': '',           # To remove the TOC
   }
-latex_theme = 'howto'  # two values: 'manual' to make a book, 'howto' to have an article
-#latex_engine = 'lualatex'
+latex_theme = 'manual'  # two values: 'manual' to make a book, 'howto' to have an article
+latex_engine = 'xelatex'
 
 
 #latex_logo = '_static/images/enpc.eps'

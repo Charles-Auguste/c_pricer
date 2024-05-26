@@ -1,7 +1,4 @@
----
-title: Class diagram for the pricer
----
-classDiagram
+classDiagram 
 
     %% Classes
     class ThomasSolver{
@@ -64,38 +61,128 @@ classDiagram
       + path() Vector
     }
 
+    class MdPathSimulator{
+      # Vector _time_points
+      # Model _model
+      # double correlation
+      + next_step() double
+      + path() Vector
+    }
+
     class EulerPathSimulator{
     }
 
-    class Payoff{
-        + payoff() double
+    class MdEulerPathSimulator{
+    }
+
+    class BroadieKayaPathSimulator{
+        # HestonModel _model
+        +generate_chi_squared() double
+        +chi_prime() double
+        +integral_sampling() double
+        +var_next_step() double
+        +asset_next_step() double
+    }
+
+    class Pricing{
+        + price() double
     }
 
     class MonteCarlo{
         - int _nb_sim
-        - PathSimulator _path_simulator
-        - Payoff _payoff
+        - PathSimulator _path_simulator_ptr
+        - Pricing _pricing_ptr
         + price() double
+        - generate_paths() Matrix
     }
 
-    class EuropeanOptionPayoff{
+    class MdMonteCarlo{
+        - int _nb_sim
+        - MdPathSimulator _path_simulator_ptr
+        - Pricing _pricing_ptr
+        + price() double
+        - generate_paths() Matrix
+    }
+
+    class EuropeanOptionPricing{
         - double _strike
         - bool _is_call
     }
 
+    class AmericanOptionPricing{
+        - double _strike
+        - bool _is_call
+    }
+
+    class AsianOptionPricing{
+        - double _strike
+        - bool _is_call
+    }
+
+    class ExplicitModel{
+         # double _S
+         # double _R
+    }
+
+    class ExplicitBlackScholesModel{
+        - normalCDF() double
+        - double _sigma
+        + CallPrice() double
+        + Vega() double
+    }
+
+    class ExplicitHestonModel{
+        - C1() Complex
+        - C2() Complex
+        - D1() Complex
+        - D2() Complex
+        - phi1() Complex
+        - phi2() Complex
+        - P_1_2() Complex
+        - gauss_hermite_points() Vector
+        - gauss_hermite_weights() Vector
+        - double _kappa
+        - double _theta 
+        - double _sigma
+        - double _rho 
+        - double _V0
+        + CallPrice() double
+        + PutPrice() double
+    }
+
+    class OptimisationImpliedVolatility{
+        - double _epsilon_iv
+        - ExplicitHestonModel _model_ptr
+        - ExplicitBlackScholesModel _bs_model_ptr
+        + calibration() 
+        + loss_function() double
+        + loss_function_square() double
+        + implied_vol()
+    }
+
     %% Links and interactions
     ThomasSolver -- ImpliedVolatilitySurface
-    ImpliedVolatilitySurface -- DupireLocalVolatilityModel
+    ImpliedVolatilitySurface o-- DupireLocalVolatilityModel
     PathSimulator --o Model
-    PathSimulator --o MdModel
+    MdPathSimulator --o MdModel
     MonteCarlo --o PathSimulator
-    MonteCarlo --o Payoff
+    MdMonteCarlo --o MdPathSimulator
+    MonteCarlo --o Pricing
+    MdMonteCarlo --o Pricing
     Model <|-- BlackScholesModel
     Model <|-- DupireLocalVolatilityModel
     Model <|-- BachelierModel
     MdModel <|-- HestonModel
     PathSimulator <|-- EulerPathSimulator
-    Payoff <|-- EuropeanOptionPayoff
+    MdPathSimulator <|-- MdEulerPathSimulator
+    MdPathSimulator <|-- BroadieKayaPathSimulator
+    Pricing <|-- EuropeanOptionPricing
+    Pricing <|-- AmericanOptionPricing
+    Pricing <|-- AsianOptionPricing
+    ExplicitModel <|-- ExplicitHestonModel
+    ExplicitModel <|-- ExplicitBlackScholesModel
+    OptimisationImpliedVolatility --o ExplicitModel
+
 
     %% Style
     style Model fill:#f1948a,stroke:#333,stroke-width:2px
@@ -105,16 +192,30 @@ classDiagram
     style DupireLocalVolatilityModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
     style HestonModel fill:#f2d7d5 ,stroke:#333,stroke-width:1px
      
-    style Payoff fill: #1abc9c ,stroke:#333,stroke-width:2px
-    style EuropeanOptionPayoff fill: #d1f2eb ,stroke:#333,stroke-width:1px
+    style Pricing fill: #1abc9c ,stroke:#333,stroke-width:2px
+    style EuropeanOptionPricing fill: #d1f2eb ,stroke:#333,stroke-width:1px
+    style AmericanOptionPricing fill: #d1f2eb ,stroke:#333,stroke-width:1px
+    style AsianOptionPricing fill: #d1f2eb ,stroke:#333,stroke-width:1px
 
     style PathSimulator fill: #f4d03f,stroke:#333,stroke-width:2px
+    style MdPathSimulator fill: #f4d03f,stroke:#333,stroke-width:2px
     style EulerPathSimulator fill: #fcf3cf ,stroke:#333,stroke-width:1px
+    style MdEulerPathSimulator fill: #fcf3cf ,stroke:#333,stroke-width:1px
+    style BroadieKayaPathSimulator fill: #fcf3cf ,stroke:#333,stroke-width:1px
+
 
     style MonteCarlo fill: #85c1e9  ,stroke:#333,stroke-width:2px
+    style MdMonteCarlo fill: #85c1e9  ,stroke:#333,stroke-width:2px
  
     style ImpliedVolatilitySurface fill:   #d5dbdb    ,stroke:#333,stroke-width:2px
     style ThomasSolver fill: #e5e8e8  ,stroke:#333,stroke-width:1px
  
 
     style Mineral fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+
+    style ExplicitModel fill: #ff991f,stroke:#333,stroke-width:2px
+    style ExplicitBlackScholesModel fill: #fdbc6e ,stroke:#333,stroke-width:1px
+    style ExplicitHestonModel fill: #fdbc6e  ,stroke:#333,stroke-width:1px
+
+    style OptimisationImpliedVolatility fill:   #ffaaed   ,stroke:#333,stroke-width:2px
+     
