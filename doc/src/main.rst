@@ -520,9 +520,37 @@ Modules and Submodules
 Thomas Solver & Implied Volatility Surface
 ------------------------------------------
 
+Thomas solver module is used in `ImpliedVolatilitySurface` class. Thanks to it, one can
+interpolate a finite volatility surface into a function that return a volatility for all
+maturity and strike.
+
 .. image:: /_static/images/thomas.png
   :width: 200
   :align: center
+
+Using `ImpliedVolatilitySurface` is easy:
+
+.. code:: c++
+
+  // first we set the risk free rate
+  double risk_free_rate = 0.03;
+  // We define a vector of Strikes and maturities
+  Vector strikes{90, 100, 110, 120};
+  Vector maturities{0.5, 1, 1.5, 2};
+  // And its volatility surface Matrix (not define here)
+  Matrix market_volatilities; // Matrix stands for vector<vector<double>>
+  
+  // We create an instance of the class
+  ImpliedVolatilitySurface surface_instance = ImpliedVolatilitySurface(
+    maturities, strikes, 
+    market_volatilities, risk_free_rate
+  );
+
+  // And that's all, we can now get a volatility
+  double volatility = surface_instance.implied_volatility(
+    maturity = 0.75, strike = 105
+  );
+
 
 Model
 -----
@@ -531,27 +559,185 @@ Model
   :width: 400
   :align: center
 
+`Model` is one of the main point of our library. This class represents a **one
+dimension** model. (On the contrary `MdModel` defines multi dimensionnal models). Our
+library defines several model child classes:
+
+- BlackScholesModel
+
+- BachelierModel
+
+- DupireLocalVolatilityModel
+
+- HestonModel
+
+Using a model is simple:
+
+.. code:: c++
+
+  // For Black & Scholes Model
+  // We define an initial value as well as a drift parameter and volatility
+  double init_value = 100;
+  double drift = 0.05;
+  double volatility = 0.2;
+
+  // We create an instance of the object
+  BlackScholesModel bs_model = BlackScholesModel(init_value, drift, volatility);
+
+  // For a given time and value pair, the model class return the value of th edrift term
+  // and the diffusion term
+  double _drift_term = ba_model.drift_term(1, 115);
+  double _diffusion_term = bs_model.diffusion_term(1, 115);
+  
+.. note::
+
+  Distinction between one dimensional models and multi dimensionnal models is a major
+  weakness in our library as it introduces too much complexity. In a future update, the
+  class `Model` will be deprecated and replace with `MdModel`
+
+
 Path Simulator
 --------------
+
+The next step of our library are `PathSimulator` and `MdPathSimulator` classes. With a
+model and some parameters, those classes return a path for our diffusion.
 
 .. image:: /_static/images/path_simulator.png
   :width: 400
   :align: center
 
+Here is how it works with `MdPathSimulator`:
+
+.. code:: c++
+
+  // First we define some parameters
+  double init_value = 100; // Initial spot price
+  // For heston
+  double r = 0.0319;     // Risk-free rate
+  double v_0 = 0.010201; // Initial volatility
+  double rho = -0.7;     // Correlation of asset and volatility
+  double kappa = 6.21;   // Mean-reversion rate
+  double theta = 0.019;  // Long run average volatility
+  double xi = 0.61;      // "Vol of vol"
+  // For simulation
+  double T = 1.00; // One year until expiry
+  double nb_plot = 1000;
+
+  // We create a model, and a MdPathSimulator instance
+  Vector init_values_heston{init_value, v_0};
+  HestonModel he_model(init_values_heston, kappa, xi, theta, r);
+
+  MdEulerPathSimulator he_path =
+      MdEulerPathSimulator(&he_model, T, nb_plot, rho);
+  Vector he_path = he_path.path();
+
+
 Pricing
 -------
+
+`Pricing` class is a kind of Payoff class. It takes a matrix as input and return the expectation of the payoff.
+In our library, three types of payoff are available:
+
+- European
+
+- American
+
+- Asian
+
+Both payoff is available with `CALL` and `PUT`
 
 .. image:: /_static/images/pricing.png
   :width: 400
   :align: center
 
+How to use the pricing class:
+
+.. code:: c++
+
+  // Define the type of price (call or put)
+  CALL_PUT call = CALL_PUT::CALL;
+
+  // Define a strike, a free-risk rate and a maturity
+  double r = 0.03;
+  int T = 1;
+  double K = 110;
+
+  // Create an instance of the class
+  EuropeanOptionPricing eu_call = EuropeanOptionPricing(K, call, r, T);
+
+  // For a given matrix P (vector<vector<double>>), you get the price of the call
+  double call_price = eu_call.price(P)
+
 
 Calibration
 -----------
 
+This class was designed to calibrate an Heston model. It is indeed a very specific
+class. Yet, the library also defined `ExplicitModel` classes. Those classes use closed
+formula to compute the price of a call or a put. This is how to use them:
+
+.. code:: c++
+  
+  // Define some parameters
+  double S0 = 100; // Initial Spot
+  double r = 0.05; // Risk free rate
+
+  double kappa = 0.5; // mean return
+  double theta = 1.; 
+  double sigma = 0.1; // Volatility of volatility
+  double rho = 0.5;   // correlation
+  double v0 = 0;      // initial variance
+
+  double K;
+  double T;
+
+  // Create excplicit models
+  ExplicitHestonModel model_he(kappa, theta, sigma, rho, v0, S0, r);
+  ExplicitBlackScholesModel model_bs(S0, r, 0.5);
+
+  // Use them !
+  double call_price_bs = model_bs.CallPrice(K, T);
+  double call_price_he = model_he.CallPrice(K, T);
+
+
 .. image:: /_static/images/optim.png
   :width: 400
   :align: center
+
+`ExplicitModel` are used to calibrate a Heston model. The class `OptimisationImpliedVolatility` performs such optimisation.
+With a matrix of implied volatility as input, one can get optimal parameters for a
+model. We defined two types of loss function. The first one is based on L1 loss over
+call prices and the second one over computed volatility. This is how to calibrate a
+model:
+
+.. code:: c++
+
+  // We define a volatility surface
+  Matrix IV_surface = {
+      {0., 20., 40., 60., 80., 100., 120., 140., 160., 180.},
+      {0.25, 0.39, 0.31, 0.24, 0.22, 0.16, 0.19, 0.23, 0.29, 0.38},
+      {0.5, 0.44, 0.36, 0.27, 0.21, 0.17, 0.21, 0.27, 0.35, 0.4},
+      {0.75, 0.45, 0.3, 0.25, 0.21, 0.18, 0.22, 0.29, 0.37, 0.45},
+      {1., 0.48, 0.42, 0.34, 0.28, 0.2, 0.26, 0.31, 0.42, 0.5},
+      {2., 0.52, 0.43, 0.34, 0.26, 0.21, 0.27, 0.38, 0.45, 0.55},
+      {3., 0.54, 0.46, 0.34, 0.27, 0.23, 0.28, 0.36, 0.49, 0.58},
+      {4., 0.57, 0.5, 0.46, 0.35, 0.25, 0.32, 0.45, 0.54, 0.6},
+      {5., 0.6, 0.52, 0.41, 0.31, 0.26, 0.34, 0.4, 0.55, 0.62}};
+  }
+
+  // and some parameters
+  double epsilon = 0.000001;
+
+  // We define explicit models
+  ExplicitHestonModel model_test(kappa, theta, sigma, rho, v0, S0, r);
+  ExplicitBlackScholesModel model_bs(S0, r, T);
+
+  // And create an instance of calibration class
+  OptimisationImpliedVolatility optim(epsilon, model_test, model_bs);
+
+  // Then, we optimise
+  optim.calibration(IV_surface, LOSS_FUNCTION::VOL);
+
 
 Monte Carlo Engine
 ------------------
@@ -559,3 +745,45 @@ Monte Carlo Engine
 .. image:: /_static/images/montecarlo.png
   :width: 400
   :align: center
+
+The last submodule of our library is actually the monte carlo engine. This is how to use
+it:
+
+.. code:: c++
+
+  // First ... define some parameters
+  double S0 = 100.;
+  double r = 0.03;
+  double volatility = 0.2;
+
+  Vector init_values{100., 0.04};
+  double theta = 0.04;
+  double kappa = 1;
+  double sigma = 0.05;
+  double rho = -0.7;
+
+  double T = 1;
+  size_t nb_points = 100;
+
+  double K = 105;
+  CALL_PUT type_option = CALL_PUT::CALL;
+
+  size_t nb_sims = 1000;
+
+  // For one dimension
+  BlackScholesModel bs_model(S0, r, volatility);
+  EulerPathSimulator bs_path(&bs_model, T, nb_points);
+  AsianOptionPricing pricing_as = AsianOptionPricing(K, type_option, r, T);
+
+  MonteCarlo bs_simulation_as(nb_sims, bs_path, pricing_as);
+
+  double price_as = bs_simulation_as.price();
+
+  // For two dimensions
+  HestonModel he_model(init_values, kappa, sigma, theta, r);
+  MdEulerPathSimulator he_path(&he_model, T, nb_points, rho);
+  EuropeanOptionPricing pricing_eu = EuropeanOptionPricing(K, type_option, r, T);
+
+  MdMonteCarlo he_simulation_eu(nb_sims, he_path, pricing_eu);
+
+  double price_eu = he_simulation_eu.price();
