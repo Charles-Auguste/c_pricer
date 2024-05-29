@@ -424,7 +424,7 @@ void OptimisationImpliedVolatility::calibration(const Matrix &IV_surface,
   // Nombre de paramètres à calibrer (kappa, theta, sigma, rho, v0)
   const int N = 5;
   const int nb_iter = 300;
-  const double dx = 1.0E-5;
+  const double dx = 1.0E-4;
   double rate = 1.0E-1;
   const double tol = 1.0E-8;
   bool arret = true; // True si on continue l'optim et false sinon

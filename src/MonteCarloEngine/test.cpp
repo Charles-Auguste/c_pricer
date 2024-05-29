@@ -12,17 +12,11 @@ protected:
   double r = 0.03;
   double volatility = 0.2;
 
-  // Vector init_values{100., 0.04};
-  // double theta = 0.04;
-  // double kappa = 1;
-  // double sigma = 0.05;
-  // double rho = -0.7;
-
-  Vector init_values{100., 0.024};
-  double theta = 0.77;
-  double kappa = 0.13;
-  double sigma = 1e-6;
-  double rho = 0.48;
+  Vector init_values{100., 0.04};
+  double theta = 0.04;
+  double kappa = 1;
+  double sigma = 0.05;
+  double rho = -0.7;
 
   double T = 1;
   size_t nb_points = 100;

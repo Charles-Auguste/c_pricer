@@ -103,11 +103,22 @@ target_link_libraries(test PUBLIC ${BINARY_NAME} ${GTEST_LIBRARIES} pthread)
 
 set_target_properties(test PROPERTIES LINKER_LANGUAGE CXX) 
 
+# Presentation
+#################################################################################################
+
+add_executable(demo demo.cpp
+    "${PUBLIC_HEADERS_FILES}"
+)
+
+target_link_libraries(demo PUBLIC ${BINARY_NAME})
+
+set_target_properties(demo PROPERTIES LINKER_LANGUAGE CXX) 
+
 
 # ADDITIONNAL LIBRARIES
 #################################################################################################
 
-# Boost
+# Eigen
 if (EXISTS "${EIGEN_PATH_INCLUDE}/Eigen")
     include_directories("${EIGEN_PATH_INCLUDE}")
 else()
