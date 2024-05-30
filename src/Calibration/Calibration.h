@@ -43,7 +43,13 @@ protected:
   double _r; // risk free rate
 };
 
-class ExplicitHestonModel : public ExplicitModel {
+class ExplicitHestonModel : public ExplicitModel {    // Heston's stochastic volatility model.
+
+    // kappa : mean reverting rate
+    // theta : long term variance
+    // sigma : normal spot volatility of variance
+    // rho : spot/variance correlation
+    // v0 : initial variance
 public:
   ExplicitHestonModel();
   ExplicitHestonModel(const double &kappa, const double &theta,

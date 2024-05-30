@@ -8,13 +8,13 @@ using namespace std;
 int main(int argc, char **argv) {
      cout << endl << "ETAPE 1 ----> Black Scholes et Volatilité Implicite" << endl;
      // Parameters of the model
-     double S0 = 100.;
-     double r = 0.03;
-     double sigma = 0.2;
+     double S0 = 100.; // Spot
+     double r = 0.03; // Risk free rate
+     double sigma = 0.2; // Volatilty
 
      // Parameters for the option
-     double T = 1.;
-     double K = 105.;
+     double T = 1.;   // Expiry
+     double K = 105.; // Strike
      CALL_PUT type_option = CALL_PUT::CALL;
      
      // Parameters for Monte Carlo Engine

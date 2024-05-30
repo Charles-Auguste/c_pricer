@@ -12,11 +12,11 @@ protected:
   double volatility = 0.2;
   // For heston
   double r = 0.0319;     // Risk-free rate
-  double v_0 = 0.010201; // Initial volatility
-  double rho = -0.7;     // Correlation of asset and volatility
+  double v_0 = 0.010201; // Initial variance
+  double rho = -0.7;     // Correlation of asset and variance
   double kappa = 6.21;   // Mean-reversion rate
-  double theta = 0.019;  // Long run average volatility
-  double xi = 0.61;      // "Vol of vol"
+  double theta = 0.019;  // Long run average variance
+  double xi = 0.61;      // Vol of variance
   // For simulation
   double T = 1.00; // One year until expiry
   double nb_plot = 10;

@@ -9,7 +9,7 @@ void MdPathSimulator::build_time() {
 
 void PathSimulator::build_time() {
   _time_points.push_back(0);
-  double delta_t = _T / _nb_steps;
+  double delta_t = _T / _nb_steps;                          // timestep
   for (size_t idx = 0; idx < _nb_steps; ++idx)
     _time_points.push_back(_time_points[idx] + delta_t);
 }
@@ -78,11 +78,11 @@ EulerPathSimulator::EulerPathSimulator(const Model *model_ptr, const double &T,
 double EulerPathSimulator::next_step(const size_t &current_time_idx,
                                      const double &current_price) const {
   std::random_device rd;
-  std::mt19937 gen(rd());
+  std::mt19937 gen(rd());       // random numbers generation
 
   std::normal_distribution<double> distribution(0, 1.);
   // N(0,1)
-  double randomVariable = distribution(gen);
+  double randomVariable = distribution(gen);    // random number
 
   double delta_t =
       _time_points[current_time_idx + 1] - _time_points[current_time_idx];

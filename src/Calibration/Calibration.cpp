@@ -130,6 +130,10 @@ void ExplicitHestonModel::SetRho(const double &rho) { _rho = rho; }
 
 void ExplicitHestonModel::SetV0(const double &v0) { _v0 = v0; }
 
+
+// Implementing Heston semi analytic formula 
+
+
 Complex ExplicitHestonModel::C1(const double &T, const double &omega) const {
   double u = -1.0;
   Complex y = i * omega - 1.0;
@@ -207,7 +211,7 @@ Complex ExplicitHestonModel::phi2(const double &T, const double &omega) const {
   return phi;
 }
 
-Vector ExplicitHestonModel::gauss_hermite_points() const {
+Vector ExplicitHestonModel::gauss_hermite_points() const {              // Quadrature to compute the integral 
   // auto gauss_hermite_points_weights =
   // boost::math::quadrature::gauss_hermite<double, degree>(); return
   // gauss_hermite_points_weights.first;
@@ -225,7 +229,7 @@ Vector ExplicitHestonModel::gauss_hermite_points() const {
           8.08518865,   8.52056928,  8.992398,    9.52090368,  10.15910925};
 }
 
-Vector ExplicitHestonModel::gauss_hermite_weights() const {
+Vector ExplicitHestonModel::gauss_hermite_weights() const {             // Quadrature points
   // auto gauss_hermite_points_weights =
   // boost::math::quadrature::gauss_hermite<double, degree>(); return
   // gauss_hermite_points_weights.second;
@@ -287,7 +291,7 @@ double ExplicitHestonModel::CallPrice(const double &K, const double &T) const {
   double sup = _S;
 
   return max(inf,
-             min(price, sup)); // On cap et floor avec les bornes d'arbitrage
+             min(price, sup)); // Bounding the result with arbitrage bounds
 }
 
 double ExplicitHestonModel::PutPrice(const double &K, const double &T) const {
@@ -362,11 +366,10 @@ void OptimisationImpliedVolatility::implied_vol(const double &T,
 double
 OptimisationImpliedVolatility::loss_function(const Matrix &IV_surface) const {
 
-  // Le premier élément du tableau est vide (ou zero)
-  // La première colonne contient les maturités (à partir de la deuxième ligne)
-  // La première ligne contient les strikes (à partir de la première colonne)
-  // Ainsi l'élement de la i-ème ligne et j-ème colonne du tableau (i>=1 j>=1)
-  // contient la vol impli pour le prix C(K_j,T_i).
+    // The first element of the table is empty (or zero)
+    // The first column contains the maturities (from the second line)
+    // The first row contains the strikes (starting from the first column)
+    // So the element in the i-th row and j-th column of the array (i>=1 j>=1) contains the implied volatility for price C(K_j,T_i).
 
   double loss = 0.;
   int maturity_size = IV_surface.size();
@@ -380,7 +383,7 @@ OptimisationImpliedVolatility::loss_function(const Matrix &IV_surface) const {
     T = IV_surface[i][0];
     for (int j = 1; j < strike_size; j++) {
       K = IV_surface[0][j];
-      call = _model_ptr->CallPrice(K, T); // prix avec heston
+      call = _model_ptr->CallPrice(K, T); // Heston price
       implied_vol(T, K, call);
       loss += pow(_bs_model_ptr->GetSigma() - IV_surface[i][j], 2) *
               _bs_model_ptr->Vega(K, T, IV_surface[i][j]);

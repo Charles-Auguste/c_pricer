@@ -4,7 +4,7 @@ EuropeanOptionPricing::EuropeanOptionPricing(double strike, CALL_PUT call_put,
                                              double r, double T)
     : _strike(strike), _call_put(call_put), _r(r), _T(T) {}
 
-double EuropeanOptionPricing::price(Matrix asset_paths) const {
+double EuropeanOptionPricing::price(Matrix asset_paths) const { // 
   Vector prices;
   double multpilicative_factor = _call_put == CALL_PUT::CALL ? 1. : -1.;
   for (size_t k = 0; k < asset_paths.size(); k++) {
@@ -29,15 +29,16 @@ AmericanOptionPricing::AmericanOptionPricing(double strike, CALL_PUT call_put,
     : _strike(strike), _call_put(call_put), _r(r), _T(T) {}
 
 Eigen::VectorXd
-AmericanOptionPricing::genlaguerre(int k, const Eigen::VectorXd &x) const {
-  Eigen::VectorXd V(x.size());
+AmericanOptionPricing::genlaguerre(int k, const Eigen::VectorXd &x) const {  // applies coordinate by coordinate the k th order Laguerre polynomial to vector x
+                                                                              
+  Eigen::VectorXd V(x.size());                                               
   for (int i = 0; i < x.size(); ++i) {
     V(i) = laguerre(k, x(i));
   }
   return V;
 }
 
-Eigen::MatrixXd AmericanOptionPricing::laguerre_basis(const Eigen::VectorXd &x,
+Eigen::MatrixXd AmericanOptionPricing::laguerre_basis(const Eigen::VectorXd &x,  
                                                       int n) const {
   Eigen::MatrixXd basis(x.size(), n);
   for (int i = 0; i < n; ++i) {
@@ -45,6 +46,10 @@ Eigen::MatrixXd AmericanOptionPricing::laguerre_basis(const Eigen::VectorXd &x,
   }
   return basis;
 }
+
+
+// This code snippet computes American style option prices with a least squares approximation as described in the Longstaff & Schwartz :
+// "Valuing American Options by Simulation: A Simple Least - Squares Approach" paper. 
 
 double AmericanOptionPricing::price(Matrix asset_paths) const {
   double multpilicative_factor = _call_put == CALL_PUT::CALL ? 1. : -1.;
@@ -62,7 +67,7 @@ double AmericanOptionPricing::price(Matrix asset_paths) const {
     }
   }
 
-  // Backward Monte Carlo least square error
+  // Backward Monte Carlo 
   // loop over assest prices
   for (int k = asset_paths[0].size() - 1; k > 0; --k) {
     Vector in_the_money;
@@ -89,18 +94,18 @@ double AmericanOptionPricing::price(Matrix asset_paths) const {
         }
       }
     }
-    X = laguerre_basis(X_, N_regressors);
+    X = laguerre_basis(X_, N_regressors);      // Laguerre basis to estimate next discounted cashflows
 
     Eigen::VectorXd y_vec(y.size());
     for (size_t i = 0; i < y.size(); ++i) {
       y_vec(i) = y[i];
     }
     Eigen::VectorXd regression =
-        (X.transpose() * X).ldlt().solve(X.transpose() * y_vec);
+        (X.transpose() * X).ldlt().solve(X.transpose() * y_vec);   // Least squares approximation to compute the conditional expectation
     Eigen::VectorXd estimated_cashflows = X * regression;
     for (size_t j = 0; j < in_the_money.size(); ++j) {
       int idx = in_the_money[j];
-      if (cashflows[idx][k] < estimated_cashflows(j)) {
+      if (cashflows[idx][k] < estimated_cashflows(j)) {             // Continuation criterion  : when the instantaneous cashflow < discounted expected next cashflow : keep the option. 
         cashflows[idx][k] = 0.0;
       }
     }
@@ -113,6 +118,7 @@ double AmericanOptionPricing::price(Matrix asset_paths) const {
         mc.push_back(cashflow[i] * exp(-_r * i * _T / N_echeances));
         break;
       }
+    mc.push_back(double 0.0)                             // 0 when the exercise criterion is never triggered on this cashflow path.
     }
   }
 
