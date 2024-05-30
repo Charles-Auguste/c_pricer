@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
      CALL_PUT type_option = CALL_PUT::CALL;
      
      // Parameters for Monte Carlo Engine
-     size_t nb_simulation = 100;
+     size_t nb_simulation = 10000;
      size_t timestep = 100;
 
      // Explicit formula

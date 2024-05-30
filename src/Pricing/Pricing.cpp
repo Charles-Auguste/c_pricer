@@ -14,8 +14,7 @@ double EuropeanOptionPricing::price(Matrix asset_paths) const {
     payoff = payoff * exp(-_r * _T);
     prices.push_back(payoff);
   }
-
-  double price = accumulate(begin(prices), end(prices), 0);
+  double price = accumulate(begin(prices), end(prices), 0.0);
   price = price / prices.size();
 
   return price;
@@ -145,7 +144,7 @@ double AsianOptionPricing::price(Matrix asset_paths) const {
     prices.push_back(payoff);
   }
 
-  double price = accumulate(begin(prices), end(prices), 0);
+  double price = accumulate(begin(prices), end(prices), 0.0);
   price = price / prices.size();
 
   return price;
