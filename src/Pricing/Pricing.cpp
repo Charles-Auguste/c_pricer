@@ -118,7 +118,6 @@ double AmericanOptionPricing::price(Matrix asset_paths) const {
         mc.push_back(cashflow[i] * exp(-_r * i * _T / N_echeances));
         break;
       }
-    mc.push_back(double 0.0)                             // 0 when the exercise criterion is never triggered on this cashflow path.
     }
   }
 
