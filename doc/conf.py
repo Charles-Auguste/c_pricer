@@ -9,7 +9,7 @@
 project = 'C++-Pricer'
 html_title = 'C++Pricer'
 copyright = '2023, Charles-Auguste GOURIO'
-author = 'Charles-Auguste GOURIO, Grégoire Ounnoughene'
+author = 'Charles-Auguste GOURIO, Grégoire Ounnoughene, Arthur Bourdon, Tom Cadiou'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
