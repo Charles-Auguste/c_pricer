@@ -5,17 +5,27 @@ EuropeanOptionPricing::EuropeanOptionPricing(double strike, CALL_PUT call_put,
     : _strike(strike), _call_put(call_put), _r(r), _T(T) {}
 
 double EuropeanOptionPricing::price(Matrix asset_paths) const { // 
+  
   Vector prices;
+  double nb_good = 0;
   double multpilicative_factor = _call_put == CALL_PUT::CALL ? 1. : -1.;
   for (size_t k = 0; k < asset_paths.size(); k++) {
     double price_at_maturity = asset_paths[k][asset_paths[k].size() - 1];
     double payoff =
         max(multpilicative_factor * (price_at_maturity - _strike), 0.);
     payoff = payoff * exp(-_r * _T);
-    prices.push_back(payoff);
+    if (!(isnan(payoff))){
+      nb_good += 1;
+      prices.push_back(payoff);
+    }
   }
   double price = accumulate(begin(prices), end(prices), 0.0);
-  price = price / prices.size();
+  price = price / nb_good;
+
+  if (nb_good != asset_paths.size()){
+    double prct_fail = (abs(asset_paths.size() - nb_good) / asset_paths.size())*100;
+    cout << "[Warning] European | fail to compute payoff with " << prct_fail << "% of simulation !" << endl;
+  }
 
   return price;
 }
@@ -138,6 +148,7 @@ AsianOptionPricing::AsianOptionPricing(double strike, CALL_PUT call_put,
 
 double AsianOptionPricing::price(Matrix asset_paths) const {
   Vector prices;
+  double nb_good = 0;
   double multpilicative_factor = _call_put == CALL_PUT::CALL ? 1. : -1.;
 
   for (size_t k = 0; k < asset_paths.size(); k++) {
@@ -146,11 +157,19 @@ double AsianOptionPricing::price(Matrix asset_paths) const {
         asset_paths[k].size();
     double payoff = max(multpilicative_factor * (mean_price - _strike), 0.);
     payoff = payoff * exp(-_r * _T);
-    prices.push_back(payoff);
+    if(!(isnan(payoff))){
+      nb_good += 1;
+      prices.push_back(payoff);
+    } 
   }
 
   double price = accumulate(begin(prices), end(prices), 0.0);
-  price = price / prices.size();
+  price = price / nb_good;
+
+  if (nb_good != asset_paths.size()){
+    double prct_fail = (abs(asset_paths.size() - nb_good) / asset_paths.size())*100;
+    cout << "[Warning] Asian | fail to compute payoff with " << prct_fail << "% of simulation !" << endl;
+  }
 
   return price;
 }

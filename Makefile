@@ -30,7 +30,7 @@ clean:
 
 build_project: 
 	@echo "Building ..."
-	@cd build/ ; cmake --build . --config Release -j 10
+	@cd build/ ; cmake --build . --config Debug -j 10
 
 
 # Code Quality
@@ -47,6 +47,12 @@ format_code:
 test:
 	@echo "testing ..."
 	@cd build/; ./test
+
+# Demo
+# ====
+
+demo:
+	@cd build/; ./demo
 
 
 

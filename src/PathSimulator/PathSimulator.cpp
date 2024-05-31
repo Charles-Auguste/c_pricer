@@ -56,8 +56,8 @@ Vector PathSimulator::path() const {
 
   _path.push_back(_model_ptr->init_value()); // size = 1
 
-  for (size_t idx = 0; idx < _time_points.size() - 1; ++idx) {
-    double next = next_step(idx, _path[idx]);
+  for (size_t idx = 1; idx < _time_points.size(); ++idx) {
+    double next = next_step(idx, _path[idx-1]);
     _path.push_back(next); // size idx + 2
   };
 
@@ -85,7 +85,7 @@ double EulerPathSimulator::next_step(const size_t &current_time_idx,
   double randomVariable = distribution(gen);    // random number
 
   double delta_t =
-      _time_points[current_time_idx + 1] - _time_points[current_time_idx];
+      _time_points[current_time_idx] - _time_points[current_time_idx -1];
 
   double next_price =
       current_price +

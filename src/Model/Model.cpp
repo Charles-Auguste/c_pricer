@@ -205,8 +205,10 @@ double DupireLocalVolatilityModel::dupire_local_volatility(
       1 + 2 * d1_value * strike * d_sigma_k * sqrt(time) +
       d1_value * d2_value * pow(strike * d2_sigma_k, 2.0) * time +
       pow(strike, 2.0) * time * sigma * d2_sigma_k;
+
   double sigma_dupire_square = pow(sigma, 2.0) * (numerator / denominator);
   double sigma_dupire = sqrt(sigma_dupire_square);
+
   return sigma_dupire;
 }
 

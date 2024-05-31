@@ -8,13 +8,11 @@ ImpliedVolatilitySurface::ImpliedVolatilitySurface(
       _market_implied_volatilities(market_implied_volatilities),
       _risk_free_rate(risk_free_rate) {
   if (!check_ordered_vectors())
-    throw "The maturities and strikes must be ordered and positive [strictly "
-          "positive for maturities]";
+    throw std::string("The maturities and strikes must be ordered and positive [strictly positive for maturities]");
   if (!check_dimensions())
-    throw "The dimensions of the implied vol matrix must be (maturity dim x "
-          "strike dim)";
+    throw std::string("The dimensions of the implied vol matrix must be (maturity dim x strike dim)");
   if (!check_vols_positivity())
-    throw "The implied volatilities must be greater than 0.";
+    throw std::string("The implied volatilities must be greater than 0.");
 
   // _delta_strikes[j] = K_{j+1} - K_j
   for (size_t j = 0; j < _strikes.size() - 1; ++j)
