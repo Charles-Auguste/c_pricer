@@ -110,5 +110,22 @@ int main(int argc, char **argv) {
 
      cout << endl << "ETAPE 4 ----> Modèle de Heston" << endl;
 
+     // Parameters
+     double kappa = 6.21;
+     double theta = 0.019;
+     double xi = 0.61;
+     double rho = -0.7;
+     double V0 = 0.01;
+
+     Vector init_values_heston{S0,V0};
+     HestonModel he_model(init_values_heston, kappa, xi, theta, r);
+
+     MdEulerPathSimulator he_path = MdEulerPathSimulator(&he_model, T, timestep, rho);
+
+     MdMonteCarlo he_simulation_eu(nb_simulation, he_path, pricing_eu_bs);
+
+     double call_price_he_eu = he_simulation_eu.price();
+     cout << "Call Européen : " << call_price_he_eu  << endl;
+
      return 0;
 }
